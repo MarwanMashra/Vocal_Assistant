@@ -84,7 +84,6 @@ def run_realtime_emotions():
             roi_color = frame[y-90:y+h+70, x-50:x+w+50]
 
             # save the detected face
-            print(save_loc)
             cv2.imwrite(save_loc, roi_color)
             # draw a rectangle bounding the face²
             cv2.rectangle(frame, (x-10, y-70),
@@ -213,6 +212,11 @@ def get_current_emotion():
                 # emotion_index=np.argmax(result[0])
                 emotion_index=np.argmax(result[0])          
                 
+            break
+        # Display the resulting frame
+        cv2.imshow('Video', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
     # # When everything is done, release the capture

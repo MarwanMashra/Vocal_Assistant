@@ -1,3 +1,4 @@
+#je teste a 19:56
 from tkinter import *
 
 from gtts import gTTS 

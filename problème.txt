@@ -1,0 +1,14 @@
+Runtime Crash parfois
+
+Traceback (most recent call last):
+  File "main.py", line 34, in <module>
+    main()
+  File "main.py", line 15, in main
+    run_realtime_emotion()
+  File "main.py", line 7, in run_realtime_emotion
+    realtime_emotions()
+  File "C:\Users\Marwa\Desktop\realtime-facial-emotion-analyzer-master\webcam_utils.py", line 70, in realtime_emotions
+    cv2.imwrite(save_loc, roi_color)
+cv2.error: OpenCV(4.5.1) C:\Users\appveyor\AppData\Local\Temp\1\pip-req-build-kh7iq4w7\opencv\modules\imgcodecs\src\loadsave.cpp:753: error: (-215:Assertion failed) !_img.empty() in function 'cv::imwrite'
+
+[ WARN:0] global C:\Users\appveyor\AppData\Local\Temp\1\pip-req-build-kh7iq4w7\opencv\modules\videoio\src\cap_msmf.cpp (434) `anonymous-namespace'::SourceReaderCB::~SourceReaderCB terminating async callback

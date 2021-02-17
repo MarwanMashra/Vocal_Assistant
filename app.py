@@ -1,5 +1,3 @@
-# test comment
-
 from tkinter import *
 
 from gtts import gTTS 

@@ -1,11 +1,10 @@
 import argparse
-from webcam_utils import run_realtime_emotion
+from webcam_utils import run_realtime_emotions
 from prediction_utils import prediction_path
 
 # for running realtime emotion detection
 def realtime_emotion():
-    prepare_realtime_emotions()
-    run_realtime_emotion()
+    run_realtime_emotions()
 
 # to run emotion detection on image saved on disk
 def run_detection_path(path):

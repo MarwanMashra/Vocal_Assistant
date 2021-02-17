@@ -84,7 +84,6 @@ def run_realtime_emotions():
             roi_color = frame[y-90:y+h+70, x-50:x+w+50]
 
             # save the detected face
-            print(save_loc)
             cv2.imwrite(save_loc, roi_color)
             # draw a rectangle bounding the face²
             cv2.rectangle(frame, (x-10, y-70),

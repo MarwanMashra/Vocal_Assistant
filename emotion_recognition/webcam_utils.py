@@ -1,11 +1,12 @@
 # utility file for emotion recognition from realtime webcam feed
 import cv2
-import sys
+import sys, os
 from keras.models import load_model
 import time
 import numpy as np
 from decimal import Decimal
 from model_utils import define_model, model_weights
+from os.path import dirname
 
 
 EMOTIONS = ['Angry', 'Disgusted', 'Fearful', 'Happy', 'Sad', 'Surprised', 'Neutral']
@@ -26,13 +27,14 @@ def prepare_realtime_emotions():
     model = model_weights(model)
     print('Model loaded')
     # load haar cascade for face
-    faceCascade = cv2.CascadeClassifier(r'haarcascades/haarcascade_frontalface_default.xml')
+    
+    faceCascade = cv2.CascadeClassifier(r''+dirname(__file__)+'/haarcascades/haarcascade_frontalface_default.xml')
     # list of given emotions
 
     # store the emoji coreesponding to different emotions
     emoji_faces = []
     for index, emotion in enumerate(EMOTIONS):
-        emoji_faces.append(cv2.imread('emojis/' + emotion.lower()  + '.png', -1))
+        emoji_faces.append(cv2.imread(dirname(__file__)+'/emojis/' + emotion.lower()  + '.png', -1))
 
 
 def run_realtime_emotions():
@@ -52,7 +54,7 @@ def run_realtime_emotions():
     video_capture.set(4, 480)  # HEIGHT
 
     # save location for image
-    save_loc = 'save_loc/1.jpg'
+    save_loc = dirname(__file__)+'/save_loc/1.jpg'
     # numpy matrix for stroing prediction
     result = np.array((1,7))    
     # for knowing whether prediction has started or not
@@ -107,7 +109,6 @@ def run_realtime_emotions():
                     result = model.predict(img)
                     print(EMOTIONS[np.argmax(result[0])])
                     emotion_index=np.argmax(result[0])
-                    ############################################################################################################################
                     
                 #save the time when the last face recognition task was done
                 prev_time = time.time()
@@ -148,7 +149,7 @@ def run_realtime_emotions():
     video_capture.release()
     cv2.destroyAllWindows()
 
-def get_current_emotion():
+def get_current_emotion(path):
     global model_prepared
     if not model_prepared:
         prepare_realtime_emotions()
@@ -165,7 +166,7 @@ def get_current_emotion():
     video_capture.set(4, 480)  # HEIGHT
 
     # save location for image
-    save_loc = 'save_loc/1.jpg'
+    save_loc = dirname(__file__)+'/save_loc/1.jpg'
     # numpy matrix for stroing prediction
     result = np.array((1,7))    
 
@@ -186,6 +187,9 @@ def get_current_emotion():
                     minSize=(30, 30),
                     flags=cv2.CASCADE_SCALE_IMAGE
                 )
+        print("pas de visage détecé...")
+
+        cv2.imshow('Video', frame)
         
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
@@ -213,14 +217,12 @@ def get_current_emotion():
                 emotion_index=np.argmax(result[0])          
                 
             break
-        # Display the resulting frame
-        cv2.imshow('Video', frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
     # # When everything is done, release the capture
     video_capture.release()
     cv2.destroyAllWindows()
 
-    return emotion_index
+    f= open(path,"w+")
+    f.write(EMOTIONS[emotion_index])
+    f.close()
+    

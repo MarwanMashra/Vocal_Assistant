@@ -64,9 +64,12 @@ def run_realtime_emotions():
     prev_time = time.time()
     # start webcam feed
 
-    while True:
+    while video_capture.isOpened():
         # Capture frame-by-frame
         ret, frame = video_capture.read()
+
+        if not ret:    #cann't read frame from webcam
+            break
         # mirror the frame
         frame = cv2.flip(frame, 1, 0)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -85,8 +88,14 @@ def run_realtime_emotions():
             # required region for the face
             roi_color = frame[y-90:y+h+70, x-50:x+w+50]
 
-            # save the detected face
-            cv2.imwrite(save_loc, roi_color)
+            
+            try:
+                cv2.imwrite(save_loc, roi_color)
+            except:
+                # error,ignore frame , no face detected, try to put more light on the subject 
+                print("ignore frame....")
+                break
+            
             # draw a rectangle bounding the face²
             cv2.rectangle(frame, (x-10, y-70),
                             (x+w+20, y+h+40), (15, 175, 61), 4)
@@ -149,21 +158,31 @@ def run_realtime_emotions():
     video_capture.release()
     cv2.destroyAllWindows()
 
-def get_current_emotion(path):
+
+def get_current_emotion(path,wait=5):
+    """ this function return 0 if success and an error code if not
+    1 -> cannot open the webcam
+    2 -> cannot read frames from the webcam
+    3 -> cannot read face in the frame 
+    """
     global model_prepared
     if not model_prepared:
         prepare_realtime_emotions()
         model_prepared=True
-    global model,faceCascade,emoji_faces
+    global model,emoji_faces
 
-    
     # set video capture device , webcam in this case
     if sys.platform == "win32":
         video_capture = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
     else:
         video_capture = cv2.VideoCapture(0)
+
+    if (not video_capture.isOpened()):
+        return 1       # ERROR: cannot open the webcam
+
     video_capture.set(3, 640)  # WIDTH
     video_capture.set(4, 480)  # HEIGHT
+    faceCascade = cv2.CascadeClassifier(r''+dirname(__file__)+'/haarcascades/haarcascade_frontalface_default.xml')
 
     # save location for image
     save_loc = dirname(__file__)+'/save_loc/1.jpg'
@@ -172,9 +191,16 @@ def get_current_emotion(path):
 
     # start webcam feed
     emotion_index= -1
-    while emotion_index==-1:
+    
+    time_end = time.time() + wait
+    while emotion_index==-1 :
+
         # Capture frame-by-frame
         ret, frame = video_capture.read()
+
+        if (not ret):    
+            return 2      #ERROR: cannot open the webcam
+
         # mirror the frame
         frame = cv2.flip(frame, 1, 0)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -187,20 +213,22 @@ def get_current_emotion(path):
                     minSize=(30, 30),
                     flags=cv2.CASCADE_SCALE_IMAGE
                 )
-        print("pas de visage détecé...")
 
-        cv2.imshow('Video', frame)
         
         # Draw a rectangle around the faces
         for (x, y, w, h) in faces:
+            
             # required region for the face
             roi_color = frame[y-90:y+h+70, x-50:x+w+50]
 
-            # save the detected face
-            cv2.imwrite(save_loc, roi_color)
+            try:
+                # save the detected face
+                cv2.imwrite(save_loc, roi_color)
+            except:
+                    print("ignore frame....")
+                    break
+                
             # draw a rectangle bounding the face²
-            cv2.rectangle(frame, (x-10, y-70),
-                            (x+w+20, y+h+40), (15, 175, 61), 4)
             
 
             # read the saved image
@@ -218,6 +246,11 @@ def get_current_emotion(path):
                 
             break
 
+        print("End after "+ str(time_end-time.time()))
+        if time.time() > time_end:
+            return 3   #cannot read face in the frame 
+            
+
     # # When everything is done, release the capture
     video_capture.release()
     cv2.destroyAllWindows()
@@ -225,4 +258,6 @@ def get_current_emotion(path):
     f= open(path,"w+")
     f.write(EMOTIONS[emotion_index])
     f.close()
+    print("Emotion detected")
+    return 0     #success  
     

@@ -12,16 +12,11 @@ def run_detection_path(path):
     prediction_path(path)
 
 if __name__ == '__main__':
-    # path= "C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/.tmp/emotion.txt"
-    read_emotion(sys.argv[1])
 
-
-    # 
-    # print("#############################################################")
-    # print(read_emotion())
     # read_emotion("C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/.tmp/emotion.txt")
-    # print("#############################################################")
+    # run_realtime_emotions()
 
-    # f= open("C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/.tmp/emotion.txt","w+")
-    # f.write("4")
-    # f.close()
+    if(len(sys.argv)>2 and sys.argv[2].isdigit()):
+        read_emotion(sys.argv[1],int(sys.argv[2]))
+    else:
+        read_emotion(sys.argv[1])

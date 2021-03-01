@@ -8,15 +8,16 @@ def read_emotion(path):
     get_current_emotion(path)
 
 # to run emotion detection on image saved on disk
-def run_detection_path(path):
-    prediction_path(path)
+def run_detection_path(path_img,path_res):
+    prediction_path(path_img,path_res)
 
 if __name__ == '__main__':
 
-    read_emotion("C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/.tmp/emotion.txt")
-    # run_realtime_emotions()
+    # try:
+    #     os.listdir()
+    #     os.listdir("volume")
+    run_detection_path(sys.argv[1],sys.argv[2])
+    # except:
+    #     print("python app.py [src] [dest]\n[src]: le path vers l'image\n[dest]: le path vers le fihcier texte du résultat")
 
-    # if(len(sys.argv)>2 and sys.argv[2].isdigit()):
-    #     read_emotion(sys.argv[1],int(sys.argv[2]))
-    # else:
-    #     read_emotion(sys.argv[1])
+    # run_detection_path("C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/_data/face.jpg","C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/_data/emotion.txt")

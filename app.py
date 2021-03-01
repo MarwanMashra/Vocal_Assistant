@@ -22,11 +22,11 @@ def convert_audio():
     
     myobj = gTTS(text=address_info, lang=language, slow=False)
     
-    myobj.save(".tmp/audio.mp3") 
+    myobj.save("_data/audio.mp3") 
     
-    playsound(".tmp/audio.mp3")
+    playsound("_data/audio.mp3")
 
-    os.remove(".tmp/audio.mp3")
+    os.remove("_data/audio.mp3")
     
         
     print(address_info)
@@ -51,7 +51,7 @@ def get_audio():
 
 def get_txt():
     txt = get_audio()
-    f= open(".tmp/myfile.txt","w+")
+    f= open("_data/myfile.txt","w+")
     f.write(txt)
     f.close()
 

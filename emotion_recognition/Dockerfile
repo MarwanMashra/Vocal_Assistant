@@ -14,4 +14,4 @@ RUN pip install tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
 RUN rm tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
 
 # command to run on container start
-CMD [ "python","./app.py"]
+ENTRYPOINT [ "python","./app.py"]

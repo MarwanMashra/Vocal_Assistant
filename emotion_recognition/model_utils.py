@@ -10,7 +10,8 @@ import os.path
 
 # define model
 def define_model():
-    model = Sequential()
+    model = Sequential() 
+    
 
     # 1st stage
     model.add(Conv2D(32, 3, input_shape=(48, 48, 1), padding='same',

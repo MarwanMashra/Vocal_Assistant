@@ -2,10 +2,10 @@ import sys,cv2
 
 class Webcam:
 
-    def __init__(self):
-        self.video_capture = None
+    video_capture = None
 
-    def open(self):
+    @staticmethod
+    def open():
         # set video capture device , webcam in this case
         if sys.platform == "win32":
             video_cap = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
@@ -15,20 +15,20 @@ class Webcam:
         if (not video_cap.isOpened()):
             return False       # ERROR: cannot open the webcam
 
-        self.video_capture= video_cap
+        Webcam.video_capture= video_cap
         return True
 
-        
-    def take_photo(self,path):
+    @staticmethod    
+    def take_photo(path):
 
-        self.video_capture.set(3, 640)  # WIDTH
-        self.video_capture.set(4, 480)  # HEIGHT
+        Webcam.video_capture.set(3, 640)  # WIDTH
+        Webcam.video_capture.set(4, 480)  # HEIGHT
 
         # save location for image
         save_loc = path+"/face.jpg"
 
         # Capture frame-by-frame
-        ret, frame = self.video_capture.read()
+        ret, frame = Webcam.video_capture.read()
 
         if (not ret):    
             return False      #ERROR: cannot open the webcam
@@ -44,11 +44,11 @@ class Webcam:
 
         return True     #success  
 
-
-    def close(self):
+    @staticmethod
+    def close():
         
         # When everything is done, release the capture
-        self.video_capture.release()
+        Webcam.video_capture.release()
         cv2.destroyAllWindows()
 
     

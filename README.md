@@ -4,8 +4,8 @@ Mode d'emploi
 ```
 TER_S6
 │
-└─── emotion_recognition
-│   │   tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
+|─── emotion_recognition
+│   │---tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
 ```
 2. Créer les containers en utilisant la commande 
 ```

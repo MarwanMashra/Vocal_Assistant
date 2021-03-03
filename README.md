@@ -9,21 +9,11 @@ $ docker-compose build
 3. pour lancer, il suffie d'éxecuter le fichier main.py. l'émotion détectée sera écrite dans _data/emotion.txt 
 
 ```
-project
-│   README.md
-│   file001.txt    
+TER_S6
 │
-└───folder1
-│   │   file011.txt
-│   │   file012.txt
-│   │
-│   └───subfolder1
-│       │   file111.txt
-│       │   file112.txt
-│       │   ...
-│   
-└───folder2
-    │   file021.txt
-    │   file022.txt
+└─── emotion_recognition
+│   │   tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
+|   |
+
 ```
 

@@ -8,7 +8,8 @@ class Webcam:
     def open():
         # set video capture device , webcam in this case
         if sys.platform == "win32":
-            video_cap = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
+            # video_cap = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
+            video_cap = cv2.VideoCapture(0) #captureDevice = camera
         else:
             video_cap = cv2.VideoCapture(0)
 
@@ -17,6 +18,19 @@ class Webcam:
 
         Webcam.video_capture= video_cap
         return True
+
+        # set video capture device , webcam in this case
+        if sys.platform == "win32":
+            Webcam.video_capture = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
+        else:
+            Webcam.video_capture = cv2.VideoCapture(0)
+
+        if (not Webcam.video_capture.isOpened()):
+            return False       # ERROR: cannot open the webcam
+
+        Webcam.video_capture= video_cap
+        return True
+
 
     @staticmethod    
     def take_photo(path):

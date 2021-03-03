@@ -4,7 +4,7 @@ Mode d'emploi
          TER_S6/emotion_recognition/tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl
 2. Créer les container en utilisant la commande 
 ```console
-~$ docker-compose build
+foo@bar:~$ docker-compose build
 ````
 3. pour lancer, il suffie d'éxecuter le fichier main.py. l'émotion détectée sera écrite dans _data/emotion.txt 
 

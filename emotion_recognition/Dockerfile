@@ -1,6 +1,6 @@
 # set base image (host OS)
 # FROM python:3.8 as emotion_recognition
-FROM jjanzic/docker-python3-opencv:opencv-4.0.1
+FROM jjanzic/docker-python3-opencv:opencv-4.0.1 as emotion_recognition-docker
 # set the working directory in the container
 WORKDIR /
 

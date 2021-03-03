@@ -7,7 +7,7 @@ import docker
 if __name__ == '__main__':
     
     Webcam.open()
-    Webcam.take_photo(dirname(__file__)+"/_data")
+    Webcam.take_photo(os.getcwd()+"/_data")
     Webcam.close()
 
     volumes={os.getcwd()+"/_data":{'bind': '/volume', 'mode': 'rw'}}

@@ -1,0 +1,10 @@
+output/
+.ipynb_checkpoints/Facial Emotions-checkpoint.ipynb
+dataset/
+cv_raw.npy
+train_raw.npy
+test_raw.npy
+saved_images/1.jpg
+__pycache__/
+save_loc/1.jpg
+tensorflow-2.4.1-cp37-cp37m-manylinux2010_x86_64.whl

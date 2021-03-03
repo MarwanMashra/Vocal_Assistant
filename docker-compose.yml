@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  emotion_recognition:
+    build:
+      context: ./emotion_recognition
+      target: emotion_recognition-docker
+    container_name: emotion_recognition

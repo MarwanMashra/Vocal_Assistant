@@ -13,5 +13,6 @@ def convert_audio(text):
     playsound("audio.mp3")
 
     os.remove("audio.mp3")
-
+    
+print("salut")
 convert_audio("salut")

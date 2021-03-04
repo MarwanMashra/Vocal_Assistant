@@ -1,4 +1,4 @@
 test/
 .vscode/
 __pycache__/
-_data/*
+_data/?*

@@ -2,7 +2,7 @@ from flask import Flask, Blueprint, render_template, request, jsonify, redirect,
 import pprint,json
 
 
-Webservice = Blueprint('url',__name__)
+Webservice = Blueprint('Webservice',__name__)
 
 @Webservice.route('/')
 def index():

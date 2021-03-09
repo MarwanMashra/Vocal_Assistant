@@ -37,4 +37,11 @@ def convert_audio(path_text,path_volume):
                 
 
 if __name__ == '__main__':
-    convert_audio(sys.argv[1],sys.argv[2])
+    if len(sys.argv)==3:
+        convert_audio(sys.argv[1],sys.argv[2])
+    else:
+        print("--------------------\nText to Speech:\n--------------------")
+        print("python ./app.py [path_text] [path_volume]")
+        print("[path_text]: the path of the text file to convert")
+        print("[path_volume]: the path of the shared directory that this container can access\n")
+    

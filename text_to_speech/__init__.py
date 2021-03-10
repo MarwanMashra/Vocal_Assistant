@@ -22,10 +22,10 @@ def convert_audio(path_text,path_volume):
     # generate audio file from text
     myobj = gTTS(text=text, lang=language, slow=False)
     file_path=path_volume+'/'+file_name
-    myobj.save(file_path) 
+    myobj.save(file_path)
     
     # ask server to play the audio file
-    response= requests.get(url("playsound"),params={'file':file_name}).json()  
+    response= requests.get(url("playsound"),params={'file':file_name}).json()
 
     # delete the audio file
     os.remove(file_path)

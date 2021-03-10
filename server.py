@@ -17,6 +17,11 @@ app.config.from_mapping(SECRET_KEY='mysecret')
 def index():
 	return jsonify(volume_content=os.listdir(path_volume))
 
+
+@app.route('/test',methods=['POST', 'GET'])
+def test():
+	return "ceci est un test"
+
 @app.route('/playsound',methods=['POST', 'GET'])
 def play():
 	# get data sent with the request
@@ -49,16 +54,18 @@ def microphone():
 	return jsonify(status="succes")
 
 
-
-
 def run_server():
     #démarer app via WSGI
     with make_server('127.0.0.1',5000,app) as server:   
-        # if(platform.startswith('win')):
-        #     print("Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
-        # else:
-        #     print("Running on http://127.0.0.1:5000/ (Press CTRL+Z to quit)")
         server.serve_forever()
 
+if __name__ == '__main__':
+	#démarer app via WSGI
+    with make_server('127.0.0.1',5000,app) as server:   
+        if(platform.startswith('win')):
+            print("Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
+        else:
+            print("Running on http://127.0.0.1:5000/ (Press CTRL+Z to quit)")
+        server.serve_forever()
         
         

@@ -1,5 +1,5 @@
 # set base image (host OS)
-FROM python:3.8 as speech_recognition-docker
+FROM python:3.8 as speech_to_text-docker
 # set the working directory in the container
 WORKDIR /
 

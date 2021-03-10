@@ -72,7 +72,7 @@ def prediction_path(path_img,path_res):
     # cv2.waitKey(0)
 
     f= open(path_res,"w")
-    f.write(str(EMOTIONS[np.argmax(result[0])]))
+    f.write(str(np.argmax(result[0])))
     f.close()
 
     return

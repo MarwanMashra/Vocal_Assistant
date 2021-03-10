@@ -39,7 +39,7 @@ class Webcam:
         Webcam.video_capture.set(4, 480)  # HEIGHT
 
         # save location for image
-        save_loc = path+"/face.jpg"
+        save_loc = path
 
         # Capture frame-by-frame
         ret, frame = Webcam.video_capture.read()

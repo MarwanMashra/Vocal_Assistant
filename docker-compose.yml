@@ -10,8 +10,8 @@ services:
         context: ./text_to_speech
         target: text_to_speech-docker
       container_name: text_to_speech
-  speech_recognition:
+  speech_to_text:
     build:
-      context: ./speech_recognition
-      target: speech_recognition-docker
-    container_name: speech_recognition
+      context: ./speech_to_text
+      target: speech_to_text-docker
+    container_name: speech_to_text

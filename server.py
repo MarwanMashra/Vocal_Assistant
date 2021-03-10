@@ -3,9 +3,7 @@ import pprint,json
 from os.path import join,dirname
 from sys import platform
 
-from webservice import Webservice
-
-from wsgiref.simple_server import make_server   # WSGI = Web Server Gateway Interface
+path_volume= abspath(__file__)+"_data/"
 
 #créer une application flask    
 app= Flask(__name__)

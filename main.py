@@ -3,22 +3,16 @@ from os.path import dirname
 from webcam import Webcam
 import docker
 from utils import *
-import multiprocessing
-from server import run_server
+
+
 path_volume= abspath(__file__)+"_data/"
 
 if __name__ == '__main__':
-    p = multiprocessing.Process(target=run_server, args=())
-    p.daemon = True
-    p.start()
-    volumes={str(path_volume):{'bind': '/volume', 'mode': 'rw'}}
-    client = docker.from_env()
-    client.containers.run('ter_s6_text_to_speech',command='volume/myfile.txt volume',volumes=volumes)
-    p.terminate()
-    # if watch(path_volume+"res.txt"):
-    #     print("file modified")
-    # else:
-    #     print("ne changes detected")
+
+    if watch(path_volume+"res.txt"):
+        print("file modified")
+    else:
+        print("ne changes detected")
     # print(path_abs("_data"))
     # data_path= os.getcwd()+"/_data"
     

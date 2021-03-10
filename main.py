@@ -3,8 +3,8 @@ from os.path import dirname
 from webcam import Webcam
 import docker
 from utils import *
-import multiprocessing
-from server import run_server
+
+
 path_volume= abspath(__file__)+"_data/"
 
 if __name__ == '__main__':
@@ -28,12 +28,12 @@ if __name__ == '__main__':
 
     # t=time.time()
     # wait=10
-    # volumes={str(data_path):{'bind': '/volume', 'mode': 'rw'}}
+    volumes={str(path_volume):{'bind': '/volume', 'mode': 'rw'}}
+
     
-    # client = docker.from_env()
-    # # client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes)
-    # client = docker.from_env()
-    # client.containers.run('ter_s6_text_to_speech',command='volume/myfile.txt volume',volumes=volumes)
+    client = docker.from_env()
+    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes)
+    client.containers.run('ter_s6_text_to_speech',command='volume/myfile.txt volume',volumes=volumes)
 
     # while True:   # wait for the result of emotion_recognition
 

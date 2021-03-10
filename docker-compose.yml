@@ -5,3 +5,13 @@ services:
       context: ./emotion_recognition
       target: emotion_recognition-docker
     container_name: emotion_recognition
+  text_to_speech:
+      build:
+        context: ./text_to_speech
+        target: text_to_speech-docker
+      container_name: text_to_speech
+  speech_recognition:
+    build:
+      context: ./speech_recognition
+      target: speech_recognition-docker
+    container_name: speech_recognition

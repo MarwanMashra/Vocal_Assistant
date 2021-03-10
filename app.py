@@ -49,6 +49,7 @@ def get_audio():
 
     return said
 
+
 def get_txt():
     txt = get_audio()
     f= open("_data/myfile.txt","w+")

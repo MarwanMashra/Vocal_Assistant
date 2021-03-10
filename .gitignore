@@ -1,4 +1,5 @@
 test/
 .vscode/
 __pycache__/
+_data/emotion.txt
 _data/face.jpg

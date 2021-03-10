@@ -1,1 +1,4 @@
-Bonjour comment vous allez
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4c0df01d80c8c5e3ce3d0da27883ce44e7ed32e2

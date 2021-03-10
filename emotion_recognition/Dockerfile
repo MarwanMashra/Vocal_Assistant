@@ -22,4 +22,4 @@ COPY save_loc /save_loc/
 COPY saved_images /saved_images/
 
 # command to run on container start
-ENTRYPOINT [ "python","./app.py"]
+ENTRYPOINT [ "python","./__init__.py"]

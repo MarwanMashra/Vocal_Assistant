@@ -1,7 +1,11 @@
-from flask import Flask
-import pprint,json
+from flask import Flask, Blueprint, render_template, request, jsonify, redirect, session, url_for
+import pprint,json,os
 from os.path import join,dirname
+import speech_recognition as sr
 from sys import platform
+from playsound import playsound
+from utils import *
+from wsgiref.simple_server import make_server 
 
 path_volume= abspath(__file__)+"_data/"
 
@@ -9,16 +13,51 @@ path_volume= abspath(__file__)+"_data/"
 app= Flask(__name__)
 app.config.from_mapping(SECRET_KEY='mysecret')
 
-#importer l'application Webservice dans app
-app.register_blueprint(Webservice)
+@app.route('/',methods=['POST', 'GET'])
+def index():
+	return jsonify(volume_content=os.listdir(path_volume))
 
-if __name__ == '__main__' :
+@app.route('/playsound',methods=['POST', 'GET'])
+def play():
+	# get data sent with the request
+	_file= str(request.args.get('file'))
+	try: 
+		playsound(path_volume+_file)
+	except Exception as error:
+		return jsonify(status="fail",error=str(error))
+	return jsonify(status="succes")
+
+
+@app.route('/microphone',methods=['POST', 'GET'])
+def microphone():
+	# get data sent with the request
+	file_name= str(request.args.get('file'))
+	try: 
+		r = sr.Recognizer()
+		mic = sr.Microphone()
+		with mic as source:
+			# start recording voice
+			print("##### start #####")
+			audio = r.listen(source)
+			print("###### end ######")
+		# save audio file in format wav
+		with open(path_volume+file_name, "wb") as f:
+			f.write(audio.get_wav_data())     
+			
+	except Exception as error:
+		return jsonify(status="fail",error=str(error))
+	return jsonify(status="succes")
+
+
+
+
+def run_server():
     #démarer app via WSGI
     with make_server('127.0.0.1',5000,app) as server:   
-        if(platform.startswith('win')):
-            print("Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
-        else:
-            print("Running on http://127.0.0.1:5000/ (Press CTRL+Z to quit)")
+        # if(platform.startswith('win')):
+        #     print("Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
+        # else:
+        #     print("Running on http://127.0.0.1:5000/ (Press CTRL+Z to quit)")
         server.serve_forever()
 
         

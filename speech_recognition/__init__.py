@@ -42,7 +42,7 @@ if __name__ == "__main__":
         convert_text(sys.argv[1],sys.argv[2])
     else:
         print("--------------------\nSpeech Recognition:\n--------------------")
-        print("python ./app.py [path_audio] [path_text]")
+        print("python ./__init__.py [path_text] [path_volume]")
         print("[path_text]: the path of the text file in which result will be stored")
         print("[path_volume]: the path of the shared directory that this container can access\n")
 

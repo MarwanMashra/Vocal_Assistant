@@ -11,5 +11,5 @@ RUN pip install -r requirements.txt
 COPY * ./
 
 # command to run on container start
-ENTRYPOINT ["python","./app.py"]
+ENTRYPOINT ["python","./__init__.py"]
 

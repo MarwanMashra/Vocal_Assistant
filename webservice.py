@@ -2,22 +2,22 @@ from flask import Flask, Blueprint, render_template, request, jsonify, redirect,
 import pprint,json,os
 import speech_recognition as sr
 from playsound import playsound
+from utils import *
 
-VOLUME_PATH=os.getcwd()+"/_data/"
+path_volume= abspath(__file__)+"_data/"
 
 Webservice = Blueprint('Webservice',__name__)
 
 @Webservice.route('/',methods=['POST', 'GET'])
-@Webservice.route('/index',methods=['POST', 'GET'])
 def index():
-	return jsonify(val="val",xyz="xyz",num=5)
+	return jsonify(volume_content=os.listdir(path_volume))
 
 @Webservice.route('/playsound',methods=['POST', 'GET'])
 def play():
 	# get data sent with the request
 	_file= str(request.args.get('file'))
 	try: 
-		playsound("_data/"+_file)
+		playsound(path_volume+_file)
 	except Exception as error:
 		return jsonify(status="fail",error=str(error))
 	return jsonify(status="succes")
@@ -36,7 +36,7 @@ def microphone():
 			audio = r.listen(source)
 			print("###### end ######")
 		# save audio file in format wav
-		with open("_data/"+file_name, "wb") as f:
+		with open(path_volume+file_name, "wb") as f:
 			f.write(audio.get_wav_data())     
 			
 	except Exception as error:

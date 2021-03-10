@@ -7,7 +7,7 @@ from webservice import Webservice
 
 from wsgiref.simple_server import make_server   # WSGI = Web Server Gateway Interface
 
-#créer une application flask
+#créer une application flask    
 app= Flask(__name__)
 app.config.from_mapping(SECRET_KEY='mysecret')
 

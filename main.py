@@ -10,7 +10,7 @@ path_volume= abspath(__file__)+"_data/"
 if __name__ == '__main__':
     p = multiprocessing.Process(target=run_server, args=())
     p.daemon = True
-    p.start()
+    p.start() 
     volumes={str(path_volume):{'bind': '/volume', 'mode': 'rw'}}
     client = docker.from_env()
     client.containers.run('ter_s6_text_to_speech',command='volume/myfile.txt volume',volumes=volumes)

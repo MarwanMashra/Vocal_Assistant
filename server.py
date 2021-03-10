@@ -9,7 +9,6 @@ from utils import *
 from wsgiref.simple_server import make_server   # WSGI = Web Server Gateway Interface
 
 
-
 path_volume= abspath(__file__)+"_data/"
 
 # Webservice = Blueprint('Webservice',__name__)

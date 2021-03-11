@@ -63,11 +63,11 @@ def emotion_recognition():
 
 def text_to_speech(text):
 
-    f= open(path_volume+"say.txt","w",encoding='utf8')
+    f= open(path_volume+"say.txt","w",encoding="utf-8")
     f.write(text)
     f.close()
 
-    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes,auto_remove=True)
+    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes,auto_remove=False)
 
     # os.remove(path_volume+"say.txt")
 

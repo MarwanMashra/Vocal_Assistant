@@ -13,7 +13,7 @@ def convert_audio(path_text,path_volume):
     language = 'fr'
     file_name="audio.mp3"
     # extract text from file
-    with open(path_text, 'r') as f:
+    with open(path_text, 'r',encoding="utf-8") as f:
         text = f.read().replace('\n',' ')
 
     if text=="":

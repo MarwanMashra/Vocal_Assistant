@@ -63,7 +63,7 @@ def emotion_recognition():
 
 def text_to_speech(text):
 
-    f= open(path_volume+"say.txt","w")
+    f= open(path_volume+"say.txt","w",encoding='utf-8')
     f.write(text)
     f.close()
 

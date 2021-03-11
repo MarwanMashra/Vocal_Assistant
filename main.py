@@ -33,7 +33,7 @@ if __name__ == '__main__':
         sys.exit()
 
     t=time.time()
-    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes)
+    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
 
     if not watch(path_volume+"emotion.txt",t):
         print("ERROR: emotion_recognition")
@@ -55,10 +55,10 @@ if __name__ == '__main__':
     f.write(phrase)
     f.close()
 
-    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes)
+    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes,auto_remove=True)
 
     t=time.time()
-    client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume',volumes=volumes)
+    client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume',volumes=volumes,auto_remove=True)
 
     if not watch(path_volume+"speech.txt",t):
         print("ERROR: speech_recognition")
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     f.write(reponse)
     f.close()
 
-    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes)
+    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes,auto_remove=True)
 
     p.terminate()
 

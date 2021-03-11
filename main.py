@@ -42,6 +42,7 @@ if __name__ == '__main__':
 
     f= open(path_volume+"emotion.txt","r")
     res= f.readline()
+    f.close()
     if not res.isdigit():
         print("ERROR: emotion is not int")
         p.terminate()
@@ -61,7 +62,7 @@ if __name__ == '__main__':
     client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume',volumes=volumes,auto_remove=True)
 
     if not watch(path_volume+"speech.txt",t):
-        print("ERROR: speech_recognition")
+        print("ERROR: speech_to_text")
         p.terminate()
         sys.exit()
 

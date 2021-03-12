@@ -1,4 +1,5 @@
 import os,time,sys
+import speech_recognition as sr
 from os.path import dirname
 from webcam import Webcam
 import docker,time
@@ -80,9 +81,21 @@ def speech_to_text():
         return False,None
 
     f= open(path_volume+"speech.txt","r")
-    speech= f.read().replace('\n',' ').strip()
+    speech= f.read()
     f.close()
 
     os.remove(path_volume+"speech.txt")
 
     return True,speech
+
+def record(file_name):
+    r = sr.Recognizer()
+    mic = sr.Microphone()
+    with mic as source:
+        # start recording voice
+        print("##### start #####")
+        audio = r.listen(source)
+        print("###### end ######")
+    # save audio file in format wav
+    with open(path_volume+file_name, "wb") as f:
+        f.write(audio.get_wav_data(convert_rate=16000)) 

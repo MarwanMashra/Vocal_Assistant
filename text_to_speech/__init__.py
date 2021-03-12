@@ -14,7 +14,7 @@ def convert_audio(path_text,path_volume):
     file_name="audio.mp3"
     # extract text from file
     with open(path_text, 'r') as f:
-        text = f.read().replace('\n',' ')
+        text = f.read()
         f.close()
         
     if text=="":

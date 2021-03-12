@@ -1,0 +1,3 @@
+comment allez vous ?
+
+python -m googlesamples.assistant.grpc.textinput --device-id 'my-device-identifier' --device-model-id 'my-model-identifier'

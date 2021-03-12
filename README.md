@@ -15,7 +15,7 @@ How to run
     $ pip install -r requirements.txt
 
     ````
-3. Make sure **Docker Desktop** is running. If you donn't have it yet, you can install it from [here](https://docs.docker.com/get-docker/){:target="_blank" rel="noopener"}
+3. Make sure **Docker Desktop** is running. If you donn't have it yet, you can install it from <a href="https://docs.docker.com/get-docker/" target="_blank">here</a>
 
 4. Create docker images with 
     ```

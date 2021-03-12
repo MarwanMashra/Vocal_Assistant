@@ -119,7 +119,7 @@ class SampleTextAssistant(object):
         return text_response, html_response
 
 
-def assist(text):
+def chatbot(text):
     api_endpoint=ASSISTANT_API_ENDPOINT
     credentials=os.path.join(click.get_app_dir('google-oauthlib-tool'),'credentials.json')
     device_model_id="ter-s6"
@@ -158,9 +158,6 @@ def assist(text):
             system_browser.display(response_html)
 
         return response_text
-
-def chatbot(text):
-    return assist(text)
 
 if __name__ == '__main__':
     if len(sys.argv)==2:

@@ -166,3 +166,18 @@ if __name__ == '__main__':
         print("----------\nChatbot:\n----------")
         print("python ./chatbot.py [text_query]")
         print("[text_query]: the query to which you want Chatbot to respond\n")
+
+
+
+
+
+# si Linux:
+# sudo apt-get install portaudio19-dev libffi-dev libssl-dev
+
+
+# pip install --upgrade google-assistant-sdk[samples]
+# pip install --upgrade google-auth-oauthlib[tool]
+# google-oauthlib-tool --scope https://www.googleapis.com/auth/assistant-sdk-prototype \
+#       --save --headless --client-secrets /path/to/client_secret_client-id.json
+# [connexion gmail et code]
+

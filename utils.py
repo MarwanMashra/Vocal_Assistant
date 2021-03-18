@@ -1,4 +1,4 @@
-import os,time,sys
+import os,time,sys,re
 import speech_recognition as sr
 from os.path import dirname
 from webcam import Webcam
@@ -8,7 +8,6 @@ def abspath(file):
 
 path_volume= abspath(__file__)+"_data/"
 volumes={str(path_volume):{'bind': '/volume', 'mode': 'rw'}}
-client = docker.from_env()
 
 def watch(path_file,t,wait=10):
     if wait>100:
@@ -27,7 +26,7 @@ def watch(path_file,t,wait=10):
             return False
 
 def emotion_recognition():
-
+    client = docker.from_env()
     t=time.time()
 
     isOpen= Webcam.open()
@@ -63,7 +62,8 @@ def emotion_recognition():
     return True,int(res)
 
 def text_to_speech(text):
-
+    client = docker.from_env()
+    text= remove_emojis(text)
     f= open(path_volume+"say.txt","w",encoding='utf-8')
     f.write(text)
     f.close()
@@ -73,6 +73,7 @@ def text_to_speech(text):
     os.remove(path_volume+"say.txt")
 
 def speech_to_text():
+    client = docker.from_env()
     t=time.time()
     client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume',volumes=volumes,auto_remove=True)
 
@@ -99,3 +100,27 @@ def record(file_name):
     # save audio file in format wav
     with open(path_volume+file_name, "wb") as f:
         f.write(audio.get_wav_data(convert_rate=16000)) 
+
+def remove_emojis(text):
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002500-\U00002BEF"  # chinese char
+        u"\U00002702-\U000027B0"
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        u"\U0001f926-\U0001f937"
+        u"\U00010000-\U0010ffff"
+        u"\u2640-\u2642" 
+        u"\u2600-\u2B55"
+        u"\u200d"
+        u"\u23cf"
+        u"\u23e9"
+        u"\u231a"
+        u"\ufe0f"  # dingbats
+        u"\u3030"
+                      "]+", re.UNICODE)
+    return emoji_pattern.sub(r'', text) # no emoji
+

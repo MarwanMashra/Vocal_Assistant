@@ -180,4 +180,3 @@ if __name__ == '__main__':
 # google-oauthlib-tool --scope https://www.googleapis.com/auth/assistant-sdk-prototype \
 #       --save --headless --client-secrets /path/to/client_secret_client-id.json
 # [connexion gmail et code]
-

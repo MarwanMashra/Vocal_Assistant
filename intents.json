@@ -1,0 +1,38 @@
+{"intents": [
+    {
+        "tag": "google",
+        "keywords":["google"],
+        "patterns": ["recherche","chercher"],
+        "responses": [],
+        "context": []
+    },
+    {
+        "tag": "wiki",
+        "keywords":["wiki","wikipédia"],
+        "patterns": [],
+        "responses": [],
+        "context": []
+    },
+    {
+        "tag": "youtube",
+        "keywords":["youtube"],
+        "patterns": [],
+        "responses": [],
+        "context": []
+    },
+    {
+        "tag": "image",
+        "keywords":[],
+        "patterns": ["image","photo"],
+        "responses": [],
+        "context": []
+    },
+    {
+        "tag": "music",
+        "keywords":[],
+        "patterns": ["music","chanson","clip","audio"],
+        "responses": [],
+        "context": []
+    }
+
+]}

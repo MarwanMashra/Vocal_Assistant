@@ -15,3 +15,8 @@ services:
       context: ./speech_to_text
       target: speech_to_text-docker
     container_name: speech_to_text
+  face_recognizer:
+    build:
+      context: ./face_recognizer
+      target: face_recognizer-docker
+    container_name: face_recognizer

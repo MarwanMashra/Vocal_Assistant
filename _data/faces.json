@@ -1,0 +1,19 @@
+{"faces": [
+    {
+        "name": "Biden",
+        "path_img":"faces/biden.jpg"
+    },
+    {
+        "name": "Obama 1",
+        "path_img":"faces/obama1.jpg"
+    },
+    {
+        "name": "Obama 2",
+        "path_img":"faces/obama2.jpg"
+    },
+    {
+        "name": "Obama 3",
+        "path_img":"faces/obama3.jpg"
+    }
+    
+]}

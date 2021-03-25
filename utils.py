@@ -89,6 +89,10 @@ def speech_to_text():
 
     return True,speech
 
+def face_recognizer(face_path="face.jpg"):
+    client = docker.from_env()
+    client.containers.run('ter_s6_face_recognizer',command='volume/'+face_path+' volume/faces.json volume/test.txt volume',volumes=volumes,auto_remove=False)
+
 def record(file_name):
     r = sr.Recognizer()
     mic = sr.Microphone()

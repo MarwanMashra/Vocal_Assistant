@@ -22,14 +22,22 @@ def take_action(text):
     tag,start,end= get_tag(text)
 
     if tag=="google":
-        res= "Je cherche sur google"
-        url = 'https://www.google.com/search?q='+text[end:].strip().replace(' ','+')
+        if len(text[end:])>2:
+            url = 'https://www.google.com/search?q='+text[end:].strip().replace(' ','+')
+            res= "Je cherche sur google"
+        else:
+            url = 'https://www.google.com/'
+            res= "J'ouvre google"
         webbrowser.open_new_tab(url)
     elif tag=="wiki":
         res= "je cherche sur wikipédia"
     elif tag=="youtube":
-        res= "Je cherche sur Youtube"
-        url= "https://www.youtube.com/results?search_query="+text[end:].strip().replace(' ','+')
+        if len(text[end:])>2:
+            url= "https://www.youtube.com/results?search_query="+text[end:].strip().replace(' ','+')
+            res= "Je cherche sur Youtube"
+        else:
+            url = 'https://www.youtube.com/'
+            res= "J'ouvre Youtube"
         webbrowser.open_new_tab(url)
     elif tag=="image":
         res= "j'ouvre une image"

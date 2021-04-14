@@ -12,6 +12,7 @@ def init(path_img,path_faces,path_text,path_volume):
         image_test = face_recognition.load_image_file(path_img)
         encoding_test = face_recognition.face_encodings(image_test)[0]
         
+        to_write="0"
         # load stored images
         for face in faces['faces']:
             path_img= path_volume+'/'+face['path_img']
@@ -21,19 +22,21 @@ def init(path_img,path_faces,path_text,path_volume):
                 encoding = face_recognition.face_encodings(image)[0]
                 result= face_recognition.compare_faces([encoding], encoding_test)[0]
                 if result:
-                    f= open(path_text, "w")
-                    f.write(face['name'])
-                    f.close()
+                    to_write= face['name']
                     break
+
+        f= open(path_text, "w")
+        f.write(to_write)
+        f.close()
 
     else:
         known_image = face_recognition.load_image_file(path_faces)
         unknown_image = face_recognition.load_image_file(path_img)
         known_encoding = face_recognition.face_encodings(known_image)[0]
         unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
-        result = face_recognition.compare_faces([known_image], unknown_encoding)[0]
+        result = face_recognition.compare_faces([known_encoding], unknown_encoding)[0]
         f= open(path_text, "w")
-        f.write(result)
+        f.write(str(int(result)))
         f.close()
 
 

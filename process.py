@@ -1,11 +1,26 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import webbrowser
 from treetaggerwrapper import TreeTagger, make_tags
 from os.path import join
 from os import getcwd
 import sys
 import json
+import random
+import re
+
+from utils import *
+from chatbot import chatbot
+
+EXIT_TREE= 1
+REPETE= 2
+path_volume= abspath(__file__)+"_data/"
 
 intents = json.loads(open('intents.json').read())
+tree = json.loads(open('tree.json').read())
+faces = json.loads(open(path_volume+'faces.json').read())
+
 
 if sys.platform.startswith('linux'):
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_unix'))
@@ -50,7 +65,6 @@ def take_action(text):
 
 def get_tag(text):
     tags = make_tags(tagger.tag_text(text),exclude_nottags=True)
-    print(tags)
     proper_name=[]
     noun=[]
     verb=[]
@@ -64,7 +78,6 @@ def get_tag(text):
             verb.append((lemma,word))
     
     list_tags= proper_name+noun+verb
-    print(list_tags)
     for word in list_tags:
         for category in intents['intents']:
             if word[0] in category['keywords']:
@@ -77,12 +90,242 @@ def get_tag(text):
     return None,None,None
 
 
+def Tree(tree=tree):
+    if type(tree)==str:
+        tree= get_tree_by_tag(tree)
+        if not tree:
+            return
+    
+    text= tree['text']
+    say=""
+    for choices in text:  
+        choice= random.choice(choices)
+        say+= analyse_var(choice,tree)
 
-# url = 'http://docs.python.org/'
-# webbrowser.open_new_tab(url)
+        # add an end of sentence point where needed
+        if say.strip()[-1]!="?" and say.strip()[-1]!="!":
+            say+="."
+
+    text_to_speech(say)
+
+    step= next_step(tree)
+
+    if step==EXIT_TREE:
+        return
+    else:
+        Tree(step)
 
 
-# if platform.startswith('linux'):
-# 	with context(join('Treetagger','TreeTagger_unix')):
-# 		run(['./install-tagger.sh'],check=True)
-# 	print('Installation de l\'étiqueteur TreeTagger réussie.')
+def analyse_var(text,tree):
+    variables = re.findall(r"(\{(.+?)\})", text)
+    for string,var in variables:
+        var = var.strip().lower()
+        if var=="context":
+            value=tree['context']
+        else:
+            value=string
+        text= text.replace(string,value,1)
+
+    return text
+
+def next_step(tree):
+    action= tree['action']
+    step=None
+
+    if action=="listen":
+        response= listen()
+        if response:
+            step= choose_next_step(response,tree)
+            if step==REPETE:
+                Tree(tree)
+                step= EXIT_TREE
+
+    elif action=="face_recognizer":
+        res= face_recognizer()
+        if res=="0":
+            step= choose_next_step("unknown",tree)
+        else:
+            step= choose_next_step("known",tree,context=res)
+    
+    elif action=="emotion_recognition":
+        emotion = emotion_recognition()
+        if emotion:
+            step= choose_next_step("known",tree,context=emotion)
+        else:
+            step= choose_next_step("unknown",tree)
+
+    elif action=="face_register":
+        isOpen= Webcam.open()
+        if isOpen:
+            Webcam.take_photo(path_volume+"user.jpg")
+            Webcam.take_photo(path_volume+"face.jpg")
+            Webcam.close()
+
+            succes= bool(int(face_recognizer("face.jpg","user.jpg")))
+            if succes:
+                text_to_speech("Quel est votre nom ?")
+                name= listen()
+                if name:
+                    if name not in [f['name'] for f in faces['faces']]: 
+                        path_img= "faces/"+name.strip().replace(' ','_')+".jpg"
+                        os.rename(path_volume+"user.jpg",path_volume+path_img)
+
+                        faces['faces'].append({'name': name, 'path_img': path_img})
+                        jsonFile = open(path_volume+"faces.json", "w+")
+                        jsonFile.write(json.dumps(faces,indent=4))
+                        jsonFile.close()
+
+                        step= choose_next_step("succes",tree) 
+                    else:            
+                        text_to_speech("Désolé, ce nom existe déjà, j'annule cette opération")
+                else:
+                    text_to_speech("Désolé, je n'ai pas compris, j'annule cette opération")
+
+                if not step:
+                    os.remove(path_volume+"user.jpg")
+                    step= "start"
+
+            else:
+                step= choose_next_step("fail",tree)
+
+        else:
+            text_to_speech("Désolé, je n'ai pas pu ouvrir le webcam")
+            step= "start"
+              
+    elif action=="chatbot":
+        response = chatbot(tree['context'])
+        if not response:
+            response= "Désolé, je ne sais pas encore répondre à ça"
+        text_to_speech(response)
+        step= random.choice(tree['next'])
+
+    elif action=="google":
+        attempt=3
+        request = speech_to_text()
+        while not request or request=="":
+            if attempt:
+                attempt-= 1
+                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
+                request = speech_to_text()
+            else:
+                break
+
+        if request and request!="":
+            text_to_speech("Voici les résultats")
+            url = 'https://www.google.com/search?q='+request.strip().replace(' ','+')
+            webbrowser.open_new_tab(url)
+            step= EXIT_TREE
+        else: 
+            text_to_speech("Désolé, je n'ai pas compris")
+            Tree(tree)
+            step= EXIT_TREE  
+
+    elif action=="youtube":
+        attempt=3
+        request = speech_to_text()
+        while not request or request=="":
+            if attempt:
+                attempt-= 1
+                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
+                request = speech_to_text()
+            else:
+                break
+
+        if request and request!="":
+            text_to_speech("Voici les résultats")
+            url = 'https://www.youtube.com/search?q='+request.strip().replace(' ','+')
+            webbrowser.open_new_tab(url)
+            step= EXIT_TREE
+        else: 
+            text_to_speech("Désolé, je n'ai pas compris")
+            Tree(tree)
+            step= EXIT_TREE  
+            
+    elif action=="stop":
+        step= EXIT_TREE
+
+    else:
+        step= random.choice(tree['next'])
+
+    return step
+
+
+def choose_next_step(text,tree,context=None):
+    responses= tree['next']
+    responses.append("start>stop")
+    
+    tags = make_tags(tagger.tag_text(text),exclude_nottags=True)
+    proper_name=[]
+    noun=[]
+    verb=[]
+    other=[]
+    for index,(word,pos,lemma) in enumerate(tags):
+        lemma=lemma.lower()
+        if ( pos=="NAM" or pos=="ADJ") and lemma not in proper_name:
+            proper_name.append(lemma)
+        elif pos=="NOM" and lemma not in noun:
+            noun.append(lemma)
+        elif pos.startswith("VER") and lemma not in verb:
+            verb.append(lemma)
+        else:
+            other.append(lemma)
+
+
+    list_tags= proper_name+noun+verb+other
+
+    # # check for stop keyword
+    # list_stop=["fermer","fermeture","annuler","annulation","arrêter","arrêt","terminer"]
+    # for tag in list_tags:
+    #     if tag in list_stop:
+    #         return EXIT_TREE
+
+    # check for other keywords
+    for tag in list_tags:
+        for response in responses:
+            if type(response)==str:
+                response= get_tree_by_tag(response)
+            if tag in response['keywords']:
+                if context:
+                    response['context']=context
+                return response
+
+    # cannot find an anwser at the start => let chatbot answer
+    if tree['tag']=="start":
+        chatbot_tree= get_tree_by_tag("start>chatbot")
+        chatbot_tree['context']= text
+        return chatbot_tree
+
+    # cannot find an anwser in the middle of an action => REPETE
+    text_to_speech("Désolé, je n'ai pas compris")
+    return REPETE
+
+def get_tree_by_tag(tag):
+    list_tree= extract_tree(tree)
+    for t in list_tree:
+        if tag==t['tag']:
+            return t
+    return None
+
+def extract_tree(tree):
+    if type(tree)==str:
+        return []
+    else:
+        l=[]
+        l.append(tree)
+        for t in tree["next"]:
+            l+= extract_tree(t)
+        return l
+        
+
+def listen():
+    attempt=3
+    response = speech_to_text()
+    while not response:
+        if attempt:
+            attempt-= 1
+            text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
+            response = speech_to_text()
+        else:
+            break
+
+    return response

@@ -120,6 +120,7 @@ class SampleTextAssistant(object):
 
 
 def chatbot(text):
+    print(text)
     api_endpoint=ASSISTANT_API_ENDPOINT
     credentials=os.path.join(click.get_app_dir('google-oauthlib-tool'),'credentials.json')
     device_model_id="ter-s6"

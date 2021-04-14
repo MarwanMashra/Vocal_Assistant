@@ -3,6 +3,9 @@ import speech_recognition as sr
 from os.path import dirname
 from webcam import Webcam
 import docker,time
+
+EMOTIONS = ['enervé', 'dégoûté', 'apeuré','joyeux', 'triste', 'surpris', 'neutre']
+
 def abspath(file):
     return os.path.abspath(os.path.dirname(file))+"/"
 
@@ -32,14 +35,14 @@ def emotion_recognition():
     isOpen= Webcam.open()
     if not isOpen:
         print("ERROR: cannot open webcam")
-        return False,None
+        return None
 
     Webcam.take_photo(path_volume+"face.jpg")
     Webcam.close()
 
     if not watch(path_volume+"face.jpg",t):
         print("ERROR: cannot take photo")
-        return False,None
+        return None
 
     t=time.time()
     client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
@@ -48,18 +51,23 @@ def emotion_recognition():
 
     if not watch(path_volume+"emotion.txt",t):
         print("ERROR: emotion_recognition cannot detect face or emotion")
-        return False,None
+        return None
 
     f= open(path_volume+"emotion.txt","r")
     res= f.readline()
     f.close()
     if not res.isdigit():
         print("ERROR: emotion is not int")
-        return False,None
+        return None
 
     os.remove(path_volume+"emotion.txt")
 
-    return True,int(res)
+    emotion_index= int(res)
+
+    if emotion_index<0:
+        return None
+    else:
+        return EMOTIONS[emotion_index]
 
 def text_to_speech(text):
     client = docker.from_env()
@@ -79,7 +87,7 @@ def speech_to_text():
 
     if not watch(path_volume+"speech.txt",t):
         print("ERROR: speech_to_text")
-        return False,None
+        return None
 
     f= open(path_volume+"speech.txt","r")
     speech= f.read()
@@ -87,11 +95,45 @@ def speech_to_text():
 
     os.remove(path_volume+"speech.txt")
 
-    return True,speech
+    return speech
 
-def face_recognizer(face_path="face.jpg"):
+def face_recognizer(face_path=None,face_bib="faces.json"):
+
+    if not face_path:
+        face_path= "face.jpg"
+        t=time.time()
+
+        isOpen= Webcam.open()
+        if not isOpen:
+            print("ERROR: cannot open webcam")
+            return None
+
+        Webcam.take_photo(path_volume+face_path)
+        Webcam.close()
+
+        if not watch(path_volume+face_path,t):
+            print("ERROR: cannot take photo")
+            return None
+
     client = docker.from_env()
-    client.containers.run('ter_s6_face_recognizer',command='volume/'+face_path+' volume/faces.json volume/test.txt volume',volumes=volumes,auto_remove=False)
+    
+
+    t=time.time()
+    client.containers.run('ter_s6_face_recognizer',command='volume/'+face_path+' volume/'+face_bib+' volume/face_reco.txt volume',volumes=volumes,auto_remove=True)
+
+    os.remove(path_volume+face_path)
+
+    if not watch(path_volume+"face_reco.txt",t):
+        print("ERROR: face_recognizer cannot detect any face")
+        return None
+
+    f= open(path_volume+"face_reco.txt","r")
+    name= f.readline()
+    f.close()
+
+    os.remove(path_volume+"face_reco.txt")
+
+    return name
 
 def record(file_name):
     r = sr.Recognizer()

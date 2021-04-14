@@ -3,34 +3,41 @@ from os.path import dirname
 from webcam import Webcam
 import docker,time
 from utils import *
+from process import *
 from server import run_server
 import multiprocessing
+import json
 
 p = multiprocessing.Process(target=run_server, args=())
 p.daemon = True
 
-EMOTIONS = ['enervé', 'dégoûté', 'apeuré','joyeux', 'triste', 'surpris', 'neutre']
+path_volume= abspath(__file__)+"_data/"
+keyword= "ok assistant"
+list_stop=["fermer","fermeture","annuler","annulation","arrêter","arrêt","terminer","quitter","fin"]
 
-if __name__ == '__main__':    
-    p.start()  
+faces = json.loads(open(path_volume+'faces.json').read())
 
-    val,index= emotion_recognition()   # reconnaissance des émotions
-    if val:
+if __name__ == '__main__':
 
-        phrase = "Vous avez l'aire "+EMOTIONS[index]+". Vous voulez écouter de la musique ?"
-        text_to_speech(phrase)    # synthèse vocale
-
-        val,speech= speech_to_text() # reconnaissace de la parole
-
-        if val:
-        
-            if speech=="oui":
-                reponse= "Ok, je lance la musique"
-            elif speech=="non":
-                reponse= "tant pis"
+    show= True
+    
+    p.start() 
+    while True:
+        if show:
+            print("\nJe suis votre assistant, dites: \n[\"ok assistant\"] pour m'appeler \n[\"quitter\"] pour quitter")
+            show= False
+        speech= speech_to_text()
+        if speech:
+            if keyword in speech:
+                show= True
+                Tree()
             else:
-                reponse= "je n'ai pas compris"
-
-            text_to_speech(reponse) # synthèse vocale
+                stop= False
+                for word in list_stop:
+                    if word in speech:
+                        stop= True
+                if stop:
+                    print("Fin de programme...")
+                    break   
 
     p.terminate()

@@ -63,16 +63,17 @@ def prediction_path(path_img,path_res):
         result = model.predict(img_face_gray)
         # print emotion
         print('Detected emotion: ' + str(EMOTIONS[np.argmax(result[0])]))
+        emotion_index= str(np.argmax(result[0]))
     except:
         # No face detected
-        return
+        emotion_index= str(-1)
     
     # show image
     # cv2.imshow("Image", img_face) 
     # cv2.waitKey(0)
 
     f= open(path_res,"w")
-    f.write(str(np.argmax(result[0])))
+    f.write(emotion_index)
     f.close()
 
     return

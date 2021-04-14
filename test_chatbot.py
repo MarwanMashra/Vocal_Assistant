@@ -21,14 +21,14 @@ if __name__ == '__main__':
 
     p.start()  
 
-    while True:
-        val,speech= speech_to_text()
-        if val:
-            response= chatbot(speech)
-            if response:
-                text_to_speech(response)
-            else:
-                text_to_speech(process(speech))
+    # while True:
+    speech= speech_to_text()
+    if speech:
+        response= chatbot(speech)
+        if response:
+            text_to_speech(response)
+        else:
+            text_to_speech("ça ne marche pas encore")
 
     p.terminate()
 

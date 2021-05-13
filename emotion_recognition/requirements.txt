@@ -2,6 +2,5 @@ numpy==1.19.5
 keras==2.4.3
 pandas==1.2.1
 h5py==3.1.0
-# opencv-python==4.5.1.48
-# tensorflow==2.4.1
+tensorflow==2.4.1
 

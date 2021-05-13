@@ -225,18 +225,6 @@
             ]
         },
         {
-            "tag": "start>chatbot",
-            "keywords":[],
-            "text":[
-
-            ],
-            "action":"chatbot",
-            "context":"",
-            "next":[
-                "start"
-            ]
-        },
-        {
             "tag": "start>stop",
             "keywords":["fermer","fermeture","annuler","annulation","arrêter","arrêt","terminer","quitter","fin"],
             "text":[

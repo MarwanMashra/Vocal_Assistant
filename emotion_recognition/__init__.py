@@ -13,17 +13,12 @@ def run_detection_path(path_img,path_text):
 
 if __name__ == '__main__':
     if len(sys.argv)==3:
-        run_detection_path(sys.argv[1],sys.argv[2])
+        prediction_path(sys.argv[1],sys.argv[2])
+    if len(sys.argv)==4:
+        prediction_path(sys.argv[1],sys.argv[2],sys.argv[3])
     else:
         print("--------------------\nEmotion Recognition:\n--------------------")
         print("python ./__init__.py [path_img] [path_text]")
         print("[path_img]: the path of the image of which emotion need be detected")
         print("[path_text]: the path of the text file in which result will be stored\n")
-    # try:
-    #     os.listdir()
-    #     os.listdir("volume")
-    
-    # except:
-    #     print("python app.py [src] [dest]\n[src]: le path vers l'image\n[dest]: le path vers le fihcier texte du résultat")
-
-    # run_detection_path("C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/_data/face.jpg","C:/xampp/htdocs/FDS/S6/HLIN601/TER_S6/_data/emotion.txt")
+        print("[name_model]: (optional) the name of the model to use\n")

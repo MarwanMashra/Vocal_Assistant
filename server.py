@@ -1,6 +1,5 @@
-from flask import Flask, Blueprint, render_template, request, jsonify, redirect, session, url_for
-import pprint,json,os
-from os.path import join,dirname
+from flask import Flask, request, jsonify
+import os
 import speech_recognition as sr
 from sys import platform
 from playsound import playsound

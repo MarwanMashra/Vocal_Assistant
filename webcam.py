@@ -20,16 +20,16 @@ class Webcam:
         return True
 
         # set video capture device , webcam in this case
-        if sys.platform == "win32":
-            Webcam.video_capture = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
-        else:
-            Webcam.video_capture = cv2.VideoCapture(0)
+        # if sys.platform == "win32":
+        #     Webcam.video_capture = cv2.VideoCapture(0, cv2.CAP_DSHOW) #captureDevice = camera
+        # else:
+        #     Webcam.video_capture = cv2.VideoCapture(0)
 
-        if (not Webcam.video_capture.isOpened()):
-            return False       # ERROR: cannot open the webcam
+        # if (not Webcam.video_capture.isOpened()):
+        #     return False       # ERROR: cannot open the webcam
 
-        Webcam.video_capture= video_cap
-        return True
+        # Webcam.video_capture= video_cap
+        # return True
 
 
     @staticmethod    

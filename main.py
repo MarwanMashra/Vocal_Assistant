@@ -1,21 +1,15 @@
-import os,sys
-from os.path import dirname
-from webcam import Webcam
-import docker,time
 from utils import *
 from process import *
 from server import run_server
 import multiprocessing
-import json
 
 p = multiprocessing.Process(target=run_server, args=())
 p.daemon = True
 
 path_volume= abspath(__file__)+"_data/"
 keyword= "ok assistant"
-list_stop=["fermer","fermeture","annuler","annulation","arrêter","arrêt","terminer","quitter","fin"]
+list_stop= get_tree_by_tag("start>stop")['keywords']
 
-faces = json.loads(open(path_volume+'faces.json').read())
 
 if __name__ == '__main__':
 

@@ -1,6 +1,7 @@
-opencv-python==4.5.1.48
-docker==4.4.2
-flask==1.1.2
-playsound==1.2.2
-SpeechRecognition==3.8.1
-PyAudio==0.2.11
+opencv-python~=4.5.1.48
+docker~=4.4.2
+flask~=1.1.2
+playsound~=1.2.2
+SpeechRecognition~=3.8.1
+PyAudio~=0.2.11
+treetaggerwrapper~=2.3

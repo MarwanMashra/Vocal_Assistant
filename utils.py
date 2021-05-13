@@ -1,6 +1,5 @@
-import os,time,sys,re
+import os,time,re
 import speech_recognition as sr
-from os.path import dirname
 from webcam import Webcam
 import docker,time
 
@@ -45,7 +44,7 @@ def emotion_recognition():
         return None
 
     t=time.time()
-    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
+    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=False)
 
     os.remove(path_volume+"face.jpg")
 

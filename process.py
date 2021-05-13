@@ -11,13 +11,11 @@ import random
 import re
 
 from utils import *
-from chatbot import chatbot
 
 EXIT_TREE= 1
 REPETE= 2
 path_volume= abspath(__file__)+"_data/"
 
-intents = json.loads(open('intents.json').read())
 tree = json.loads(open('tree.json').read())
 faces = json.loads(open(path_volume+'faces.json').read())
 
@@ -29,68 +27,9 @@ elif sys.platform.startswith('win'):
 else:
     sys.exit('Système d\'exploitation non compatible.')
 
-def process(text):
-
-    return take_action(text)
-
-def take_action(text):
-    tag,start,end= get_tag(text)
-
-    if tag=="google":
-        if len(text[end:])>2:
-            url = 'https://www.google.com/search?q='+text[end:].strip().replace(' ','+')
-            res= "Je cherche sur google"
-        else:
-            url = 'https://www.google.com/'
-            res= "J'ouvre google"
-        webbrowser.open_new_tab(url)
-    elif tag=="wiki":
-        res= "je cherche sur wikipédia"
-    elif tag=="youtube":
-        if len(text[end:])>2:
-            url= "https://www.youtube.com/results?search_query="+text[end:].strip().replace(' ','+')
-            res= "Je cherche sur Youtube"
-        else:
-            url = 'https://www.youtube.com/'
-            res= "J'ouvre Youtube"
-        webbrowser.open_new_tab(url)
-    elif tag=="image":
-        res= "j'ouvre une image"
-    elif tag=="music":
-        res= "je lance un music"
-    else:
-        res= "je ne suis pas encore programmé pour ça"
-
-    return res
-
-def get_tag(text):
-    tags = make_tags(tagger.tag_text(text),exclude_nottags=True)
-    proper_name=[]
-    noun=[]
-    verb=[]
-    for index,(word,pos,lemma) in enumerate(tags):
-        lemma=lemma.lower()
-        if ( pos=="NAM" or pos=="ADJ") and (lemma,word) not in proper_name:
-            proper_name.append((lemma,word))
-        elif pos=="NOM" and (lemma,word) not in noun:
-            noun.append((lemma,word))
-        elif pos.startswith("VER") and (lemma,word) not in verb:
-            verb.append((lemma,word))
-    
-    list_tags= proper_name+noun+verb
-    for word in list_tags:
-        for category in intents['intents']:
-            if word[0] in category['keywords']:
-                return category['tag'],text.find(word[1]),text.find(word[1])+len(word[1])
-    for word in list_tags:
-        for category in intents['intents']:
-            if word[0] in category['patterns']:
-                return category['tag'],text.find(word[1]),text.find(word[1])+len(word[1])
-
-    return None,None,None
-
 
 def Tree(tree=tree):
+    # if tree is a tag, search it
     if type(tree)==str:
         tree= get_tree_by_tag(tree)
         if not tree:
@@ -98,18 +37,22 @@ def Tree(tree=tree):
     
     text= tree['text']
     say=""
+
+    # Do a random choices of sentences to say
     for choices in text:  
         choice= random.choice(choices)
         say+= analyse_var(choice,tree)
 
         # add an end of sentence point where needed
         if say.strip()[-1]!="?" and say.strip()[-1]!="!":
-            say+="."
+            say+=","
 
     text_to_speech(say)
 
+    # Chose the next step based on the request of the user 
     step= next_step(tree)
 
+    # stop the fonction if the user asked for
     if step==EXIT_TREE:
         return
     else:

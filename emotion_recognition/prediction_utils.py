@@ -1,19 +1,21 @@
-from model_utils import define_model, model_weights
 import cv2
 import os.path
 import numpy as np
-from os.path import dirname
+from os.path import dirname,exists
+from tensorflow.keras.models import load_model
 
 # make prediction on image saved on disk
-def prediction_path(path_img,path_res):
+def prediction_path(path_img,path_res,model_name="model.h5"):
+    if not exists("models/"+model_name):
+        print('Model '+model_name+' not found !!')
+        model_name="model.h5"
+        
     # load keras model
-    model = define_model()
-    model = model_weights(model)
+    model = load_model("models/"+model_name)
 
     faceCascade = cv2.CascadeClassifier(r''+dirname(__file__)+'/haarcascades/haarcascade_frontalface_default.xml')
     # list of given emotions
-    EMOTIONS = ['Angry', 'Disgusted', 'Fearful',
-                'Happy', 'Sad', 'Surprised', 'Neutral']
+    EMOTIONS = ['Angry', 'Disgusted', 'Fearful', 'Happy', 'Sad', 'Surprised', 'Neutral']
 
     if os.path.exists(path_img):
         # read the image
@@ -28,15 +30,7 @@ def prediction_path(path_img,path_res):
         print('Image not found')
         return
 
-    # print("######################")
-    # print(img)
-    
-    # window_name = 'Image'
-    # Displaying the image 
-    # cv2.imshow(window_name, img) 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # cv2.imshow(window_name, gray) 
-    # cv2.waitKey(3000)
 
     # find face in the frame
     faces = faceCascade.detectMultiScale(
@@ -50,7 +44,6 @@ def prediction_path(path_img,path_res):
     for (x, y, w, h) in faces:
         # required region for the face
         img_face = img[y-90:y+h+70, x-50:x+w+50]
-        print(x, y, w, h)
         break
     
     try: 
@@ -67,10 +60,6 @@ def prediction_path(path_img,path_res):
     except:
         # No face detected
         emotion_index= str(-1)
-    
-    # show image
-    # cv2.imshow("Image", img_face) 
-    # cv2.waitKey(0)
 
     f= open(path_res,"w")
     f.write(emotion_index)

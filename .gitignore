@@ -4,3 +4,4 @@ __pycache__/
 _data/emotion.txt
 _data/face.jpg
 client_secret*
+*.pickle

@@ -44,7 +44,7 @@ def emotion_recognition():
         return None
 
     t=time.time()
-    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=False)
+    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
 
     os.remove(path_volume+"face.jpg")
 
@@ -79,10 +79,10 @@ def text_to_speech(text):
 
     os.remove(path_volume+"say.txt")
 
-def speech_to_text():
+def speech_to_text(play_effect="True"):
     client = docker.from_env()
     t=time.time()
-    client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume',volumes=volumes,auto_remove=True)
+    client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume '+play_effect,volumes=volumes,auto_remove=True)
 
     if not watch(path_volume+"speech.txt",t):
         print("ERROR: speech_to_text")
@@ -168,4 +168,10 @@ def remove_emojis(text):
         u"\u3030"
                       "]+", re.UNICODE)
     return emoji_pattern.sub(r'', text) # no emoji
+
+def str_to_bool(str):
+    if str in ["True","true",True,"1",1]:
+        return True
+    else: 
+        return False
 

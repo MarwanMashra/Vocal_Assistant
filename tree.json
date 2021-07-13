@@ -12,7 +12,7 @@
             "tag": "start>face",
             "keywords":["facial"],
             "text":[
-                ["on s'est déjà rencontré ?","Votre visage me dit quelque chose","vous me dit quelque chose","peut-être que je vous connais déjà"],
+                ["on s'est déjà rencontré ?","Votre visage me dit quelque chose","vous me dites quelque chose","peut-être que je vous connais déjà"],
                 ["Puis-je vous voir un peu ?","Je peux jeter un coup d'oeil de plus près?","Puis-je vous regarder via le webcam ?"]
             ],
             "action":"listen",
@@ -204,7 +204,7 @@
             "tag": "start>google",
             "keywords":["chercher","google","recherche","rechercher"],
             "text":[
-                ["Que voulez-vous chercher ?","Ok, qu'est-ce que je dois chercher ?"]
+                ["Que voulez-vous chercher ?","Ok, qu'est-ce que je dois chercher ?","Dites moi ce que je dois chercher"]
             ],
             "action":"google",
             "context":"",
@@ -216,7 +216,7 @@
             "tag": "start>youtube",
             "keywords":["youtube","vidéo"],
             "text":[
-                ["Que voulez-vous chercher ?","Ok, qu'est-ce que je dois chercher ?"]
+                ["Quelle vidéo vous voulez voir ?","Quelle vidéo vous voulez chercher ?","Ok, qu'est-ce que vous voulez chercher sur YouTube ?"]
             ],
             "action":"youtube",
             "context":"",

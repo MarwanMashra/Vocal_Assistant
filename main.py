@@ -20,7 +20,7 @@ if __name__ == '__main__':
         if show:
             print("\nJe suis votre assistant, dites: \n[\"ok assistant\"] pour m'appeler \n[\"quitter\"] pour quitter")
             show= False
-        speech= speech_to_text()
+        speech= speech_to_text("False")
         if speech:
             if keyword in speech:
                 show= True

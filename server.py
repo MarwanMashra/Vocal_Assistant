@@ -7,6 +7,8 @@ from utils import *
 from wsgiref.simple_server import make_server 
 
 path_volume= abspath(__file__)+"_data/"
+start_rec_effect= path_volume+'effects/start_rec_effect.wav'
+end_rec_effect= path_volume+'effects/end_rec_effect.wav'
 
 #créer une application flask    
 app= Flask(__name__)
@@ -36,14 +38,20 @@ def play():
 def microphone():
 	# get data sent with the request
 	file_name= str(request.args.get('file'))
+	play_effect= str_to_bool(str(request.args.get('play_effect')))
+
 	try: 
 		r = sr.Recognizer()
 		mic = sr.Microphone()
 		with mic as source:
 			# start recording voice
+			if play_effect and os.path.isfile(start_rec_effect):
+				playsound(start_rec_effect)
 			print("##### start #####")
 			audio = r.listen(source)
 			print("###### end ######")
+			if play_effect and os.path.isfile(end_rec_effect):
+				playsound(end_rec_effect)
 		# save audio file in format wav
 		with open(path_volume+file_name, "wb") as f:
 			f.write(audio.get_wav_data())     

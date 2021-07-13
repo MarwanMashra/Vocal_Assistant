@@ -134,13 +134,6 @@ def next_step(tree):
         else:
             text_to_speech("Désolé, je n'ai pas pu ouvrir le webcam")
             step= "start"
-              
-    elif action=="chatbot":
-        response = chatbot(tree['context'])
-        if not response:
-            response= "Désolé, je ne sais pas encore répondre à ça"
-        text_to_speech(response)
-        step= random.choice(tree['next'])
 
     elif action=="google":
         attempt=3
@@ -154,14 +147,14 @@ def next_step(tree):
                 break
 
         if request and request!="":
-            text_to_speech("Voici les résultats")
+            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
             url = 'https://www.google.com/search?q='+request.strip().replace(' ','+')
             webbrowser.open_new_tab(url)
-            step= EXIT_TREE
+
         else: 
             text_to_speech("Désolé, je n'ai pas compris")
-            Tree(tree)
-            step= EXIT_TREE  
+
+        step= "start"  
 
     elif action=="youtube":
         attempt=3
@@ -175,14 +168,13 @@ def next_step(tree):
                 break
 
         if request and request!="":
-            text_to_speech("Voici les résultats")
+            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
             url = 'https://www.youtube.com/search?q='+request.strip().replace(' ','+')
             webbrowser.open_new_tab(url)
-            step= EXIT_TREE
         else: 
             text_to_speech("Désolé, je n'ai pas compris")
-            Tree(tree)
-            step= EXIT_TREE  
+
+        step= "start" 
             
     elif action=="stop":
         step= EXIT_TREE
@@ -231,12 +223,6 @@ def choose_next_step(text,tree,context=None):
                 if context:
                     response['context']=context
                 return response
-
-    # cannot find an anwser at the start => let chatbot answer
-    if tree['tag']=="start":
-        chatbot_tree= get_tree_by_tag("start>chatbot")
-        chatbot_tree['context']= text
-        return chatbot_tree
 
     # cannot find an anwser in the middle of an action => REPETE
     text_to_speech("Désolé, je n'ai pas compris")

@@ -1,4 +1,4 @@
-opencv-python~=4.5.1.48
+opencv-python
 docker~=4.4.2
 flask~=1.1.2
 playsound~=1.2.2

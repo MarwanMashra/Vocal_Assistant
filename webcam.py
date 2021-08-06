@@ -1,4 +1,4 @@
-import sys,cv2
+import sys,cv2,os
 
 class Webcam:
 
@@ -35,6 +35,10 @@ class Webcam:
     @staticmethod    
     def take_photo(path):
 
+
+        if os.path.exists(path):
+            os.remove(path)
+
         Webcam.video_capture.set(3, 640)  # WIDTH
         Webcam.video_capture.set(4, 480)  # HEIGHT
 
@@ -53,6 +57,7 @@ class Webcam:
         try:
             # save the detected face
             cv2.imwrite(save_loc, frame)
+            os.system("chmod u+rwx "+save_loc)
         except:
             return False
 

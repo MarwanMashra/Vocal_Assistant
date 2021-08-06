@@ -4,7 +4,7 @@ warnings.filterwarnings("ignore")
 import webbrowser
 from treetaggerwrapper import TreeTagger, make_tags
 from os.path import join
-from os import getcwd
+from os import getcwd,popen
 import sys
 import json
 import random
@@ -20,15 +20,21 @@ tree = json.loads(open('tree.json').read())
 faces = json.loads(open(path_volume+'faces.json').read())
 
 
-if sys.platform.startswith('linux'):
-    tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_unix'))
-elif sys.platform.startswith('win'):
+if sys.platform.startswith('win'):
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_windows'))
+elif "aarch" in popen("uname -m").read():
+    tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_pi'))
+elif sys.platform.startswith('linux'):
+    tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_unix'))
 else:
     sys.exit('Système d\'exploitation non compatible.')
 
 
 def Tree(tree=tree):
+
+
+    clean_cache()
+
     # if tree is a tag, search it
     if type(tree)==str:
         tree= get_tree_by_tag(tree)

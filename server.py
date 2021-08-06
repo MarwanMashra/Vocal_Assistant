@@ -5,6 +5,18 @@ from sys import platform
 from playsound import playsound
 from utils import *
 from wsgiref.simple_server import make_server 
+from ctypes import *
+
+# Define our error handler type
+ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+def py_error_handler(filename, line, function, err, fmt):
+  return
+c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
+asound = cdll.LoadLibrary('libasound.so')
+# Set error handler
+asound.snd_lib_error_set_handler(c_error_handler)
+
 
 path_volume= abspath(__file__)+"_data/"
 start_rec_effect= path_volume+'effects/start_rec_effect.wav'
@@ -40,7 +52,11 @@ def microphone():
 	file_name= str(request.args.get('file'))
 	play_effect= str_to_bool(str(request.args.get('play_effect')))
 
+	if os.path.exists(path_volume+file_name):
+		os.remove(path_volume+file_name)
+
 	try: 
+		# print(sr.Microphone.list_microphone_names())
 		r = sr.Recognizer()
 		mic = sr.Microphone()
 		with mic as source:

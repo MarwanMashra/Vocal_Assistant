@@ -1,12 +1,18 @@
+
 import speech_recognition as sr
 import sys,os,requests
 
-DEFAULT_HOST= "host.docker.internal"
+
+if sys.platform.startswith('win'):
+    DEFAULT_HOST= "host.docker.internal"
+else:
+    DEFAULT_HOST= "127.0.0.1"
+
 DEFAULT_PORT= "5000"
 
 def url(route="",host=DEFAULT_HOST,port=DEFAULT_PORT):
     return 'http://'+host+':'+port+'/'+route
-    
+
 def convert_text(path_text,path_volume,play_effect=True):
     # information about the file audio
     file_name="audio.mp3"

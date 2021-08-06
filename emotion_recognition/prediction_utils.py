@@ -9,7 +9,7 @@ def prediction_path(path_img,path_res,model_name="model.h5"):
     if not exists("models/"+model_name):
         print('Model '+model_name+' not found !!')
         model_name="model.h5"
-        
+      
     # load keras model
     model = load_model("models/"+model_name)
 

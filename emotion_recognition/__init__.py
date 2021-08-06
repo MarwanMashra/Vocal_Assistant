@@ -1,3 +1,5 @@
+import cv2
+import tensorflow as tf
 import argparse
 from webcam_utils import get_current_emotion,run_realtime_emotions
 from prediction_utils import prediction_path
@@ -14,7 +16,7 @@ def run_detection_path(path_img,path_text):
 if __name__ == '__main__':
     if len(sys.argv)==3:
         prediction_path(sys.argv[1],sys.argv[2])
-    if len(sys.argv)==4:
+    elif len(sys.argv)==4:
         prediction_path(sys.argv[1],sys.argv[2],sys.argv[3])
     else:
         print("--------------------\nEmotion Recognition:\n--------------------")

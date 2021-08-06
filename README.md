@@ -17,10 +17,10 @@ How to run
     ````
 3. Make sure **Docker Desktop** is running. If you donn't have it yet, you can install it from [here](https://docs.docker.com/get-docker/)
 
-4. Create docker images with 
+4. Create docker images by running
     ```
 
-    $ docker-compose build
+    $ docker-compose -f ./docker-compose/docker-compose-x86.yml build
 
     ````
 5. Finally, start the app with 

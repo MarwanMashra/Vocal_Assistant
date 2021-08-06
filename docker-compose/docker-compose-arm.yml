@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  emotion_recognition:
+    build:
+      context: ../emotion_recognition
+      target: emotion_recognition-docker-arm
+    container_name: emotion_recognition
+  text_to_speech:
+      build:
+        context: ../text_to_speech
+        target: text_to_speech-docker-arm
+      container_name: text_to_speech
+  speech_to_text:
+    build:
+      context: ../speech_to_text
+      target: speech_to_text-docker-arm
+    container_name: speech_to_text
+  face_recognizer:
+    build:
+      context: ../face_recognizer
+      target: face_recognizer-docker-arm
+    container_name: face_recognizer

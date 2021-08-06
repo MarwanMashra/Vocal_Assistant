@@ -20,11 +20,12 @@ tree = json.loads(open('tree.json').read())
 faces = json.loads(open(path_volume+'faces.json').read())
 
 
-if sys.platform.startswith('win'):
+my_os = get_os()
+if my_os=='win':
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_windows'))
-elif "aarch" in popen("uname -m").read():
+elif my_os=='pi':
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_pi'))
-elif sys.platform.startswith('linux'):
+elif my_os=='linux':
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_unix'))
 else:
     sys.exit('Système d\'exploitation non compatible.')

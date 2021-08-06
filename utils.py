@@ -1,4 +1,4 @@
-import os,time,re
+import os,time,re,sys
 import speech_recognition as sr
 from webcam import Webcam
 import docker,time
@@ -183,4 +183,15 @@ def clean_cache():
     for f in os.listdir(path_volume):
         if os.path.isfile(os.path.join(path_volume, f)) and not ".json" in f :
             os.remove(os.path.join(path_volume, f))
+
+
+def get_os():
+    if sys.platform.startswith('win'):
+        return "win"
+    elif "aarch" in os.popen("uname -m").read():
+        return "pi"
+    elif sys.platform.startswith('linux'):
+        return "linux"
+    else:
+        return None
 

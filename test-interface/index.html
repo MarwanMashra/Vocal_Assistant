@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine"> -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<meta name="description" content="An organization chart editor -- edit details and change relationships."/> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<!-- <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css"> -->
+<link rel="stylesheet" href="metro.min.css"/> 
+<link rel="stylesheet" href="fnon.min.css"/> 
+<link rel="stylesheet" href="tooltip.css"/> 
+<link rel="stylesheet" href="style.css"/> 
+<link rel="stylesheet" href="go.css"/> 
+<!-- Copyright 1998-2021 by Northwoods Software Corporation. -->
+<title>Org Chart Editor</title>
+</head>
+
+<body>
+  
+    <div class="split left">
+        <div id="container">
+            <div id="form-container"></div>
+        </div>
+        
+    </div>
+    
+    <div class="split right" >
+        <div style="margin-right:0;" class="md:flex flex-col md:flex-row md:min-h-screen w-full max-w-screen-xl mx-auto">
+            <!-- * * * * * * * * * * * * * -->
+            <!-- Start of GoJS sample code -->
+            <div class="w-full">
+                <div id="sample" style="height: 100%;">
+                    <div id="myDiagramDiv" style="background-color: #34343C; border: solid 1px black; height: 100%;"></div>
+                    <!-- <p><button id="zoomToFit">Zoom to Fit</button> <button id="centerRoot">Center on root</button></p> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script src="fnon.min.js"></script>
+    <script src="tree.js"></script>
+    <script src="go-full.js"></script>
+    <script src="script.js"></script>
+    <script>
+    //     $(document).ready(function () {
+    //         $("#test-div").replaceWith(`
+    //             <select id="select-state" placeholder="Pick a state...">
+    //                 <option value="">Select a state...</option>
+    //                 <option value="AL">Alabama</option>
+    //                 <option value="AK">Alaska</option>
+    //                 <option value="AZ">Arizona</option>
+    //                 <option value="AR">Arkansas</option>
+    //                 <option value="CA">California</option>
+    //                 <option value="CO">Colorado</option>
+    //                 <option value="CT">Connecticut</option>
+    //                 <option value="DE">Delaware</option>
+    //                 <option value="DC">District of Columbia</option>
+    //                 <option value="FL">Florida</option>
+    //                 <option value="GA">Georgia</option>
+    //                 <option value="HI">Hawaii</option>
+    //                 <option value="ID">Idaho</option>
+    //                 <option value="IL">Illinois</option>
+    //                 <option value="IN">Indiana</option>
+    //             </select>
+    //         `)
+    //      $('#select-state').selectize({
+    //          sortField: 'text'
+    //      });
+    //  });
+     </script>
+</body>
+
+</html>

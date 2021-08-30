@@ -28,7 +28,10 @@ if __name__ == '__main__':
         if speech:
             if keyword in speech:
                 show= True
-                Tree()
+                if auth():
+                    Tree()
+                else:
+                    text_to_speech("l'authentification a échouée")
             else:
                 stop= False
                 for word in list_stop:

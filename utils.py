@@ -1,7 +1,8 @@
 import os,time,re,sys
 import speech_recognition as sr
 from webcam import Webcam
-import docker,time
+import docker,time,json,bcrypt
+from getpass import getpass
 
 EMOTIONS = ['enervé', 'dégoûté', 'apeuré','joyeux', 'triste', 'surpris', 'neutre']
 
@@ -10,6 +11,11 @@ def abspath(file):
 
 path_volume= abspath(__file__)+"_data/"
 volumes={str(path_volume):{'bind': '/volume', 'mode': 'rw'}}
+
+CONFIG_PATH = abspath(__file__)+"config.json"
+CREDENTIALS_PATH = abspath(__file__)+"credentials/credentials.json"
+
+config = json.loads(open(CONFIG_PATH).read())
 
 def watch(path_file,t,wait=10):
 
@@ -194,4 +200,62 @@ def get_os():
         return "linux"
     else:
         return None
+
+
+def auth():
+    if not str_to_bool(config['auth']):
+        return True
+    else:
+        if os.path.exists(CREDENTIALS_PATH):
+            logs = json.loads(open(CREDENTIALS_PATH).read())
+            hash = logs['password'].encode()
+            return check_password(hash,logs['username'])
+            
+        else:
+            password = enter_password()
+            hash = bcrypt.hashpw(str(password).encode('utf-8'),bcrypt.gensalt())
+            text_to_speech("Veuillez entrer un nom d'utilisateur")
+            username = input("Entrez un nom d'utilisateur : ")
+            logs={'username':username,'password':str(hash)[2:len(hash)+2]}
+
+            with open(CREDENTIALS_PATH, 'w',encoding='utf8') as outfile:
+                json.dump(logs, outfile,indent=4,ensure_ascii=False)
+
+            return True
+
+
+def enter_password():
+    while True:
+        text_to_speech("Veuillez entrer un mot de passe d'au moins 6 caractères")
+        password = getpass("Entrez le mot de passe (au moins 6 caractères): ")
+        if len(password)<6:
+            text_to_speech("Le mot de passe est trop court")
+            print("mot de passe trop court")
+        else:
+            text_to_speech("Veuillez confirmer votre mot de passe")
+            confirm_password = getpass("Corfirmation du mot de passe : ")
+            if password == confirm_password:
+                return password
+            else:
+                text_to_speech("La confirmation ne correspond pas au mot de passe")
+                print("Le mot de passe est différent")
+
+
+def check_password(hash,username,nb_try=3):
+    while nb_try:
+        nb_try -= 1
+        text_to_speech("Veuillez entrer le mot de passe")
+        password = getpass("Entrez votre mot de passe : ")
+        if bcrypt.hashpw(password.encode('utf-8'),hash)== hash:
+            text_to_speech(f"Bonjour {username}")
+            return True
+        elif nb_try:
+            text_to_speech("mot de passe incorrect")
+            print(f"Mot de passe incorrect, il vous reste {nb_try} essais")
+    return False
+
+
+
+
+
 

@@ -14,10 +14,14 @@ from utils import *
 
 EXIT_TREE= 1
 REPETE= 2
+
+CONFIG_PATH = abspath(__file__)+"config.json"
+
 path_volume= abspath(__file__)+"_data/"
 
 tree = json.loads(open('tree.json').read())
 faces = json.loads(open(path_volume+'faces.json').read())
+config = json.loads(open(CONFIG_PATH).read())
 
 
 my_os = get_os()
@@ -42,6 +46,11 @@ def Tree(tree=tree):
         if not tree:
             return
     
+
+    if not str_to_bool(config['screen_mode']) and "screen" in tree['config']:
+        text_to_speech("Cette action n'est pas possible car le mode écran est désactivé")
+        return "start"
+
     text= tree['text']
     say=""
 
@@ -214,12 +223,6 @@ def choose_next_step(text,tree,context=None):
 
 
     list_tags= proper_name+noun+verb+other
-
-    # # check for stop keyword
-    # list_stop=["fermer","fermeture","annuler","annulation","arrêter","arrêt","terminer"]
-    # for tag in list_tags:
-    #     if tag in list_stop:
-    #         return EXIT_TREE
 
     # check for other keywords
     for tag in list_tags:

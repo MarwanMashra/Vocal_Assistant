@@ -1,15 +1,10 @@
 from gtts import gTTS 
 import os,requests,sys
 
-if sys.platform.startswith('win'):
-    DEFAULT_HOST= "host.docker.internal"
-else:
-    DEFAULT_HOST= "127.0.0.1"
-
     
 DEFAULT_PORT= "5000"
 
-def url(route="",host=DEFAULT_HOST,port=DEFAULT_PORT):
+def url(route,host,port=DEFAULT_PORT):
     return 'http://'+host+':'+port+'/'+route
 
     
@@ -31,7 +26,10 @@ def convert_audio(path_text,path_volume):
     myobj.save(file_path)
     
     # ask server to play the audio file
-    response= requests.get(url("playsound"),params={'file':file_name}).json()
+    try:
+        response= requests.get(url("playsound",host="127.0.0.1"),params={'file':file_name}).json()
+    except:
+        response= requests.get(url("playsound",host="host.docker.internal"),params={'file':file_name}).json()
 
     # delete the audio file
     os.remove(file_path)

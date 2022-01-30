@@ -9,6 +9,7 @@ import sys
 import json
 import random
 import re
+from nltk import word_tokenize
 
 from utils import *
 
@@ -23,7 +24,7 @@ tree = json.loads(open('tree.json').read())
 faces = json.loads(open(path_volume+'faces.json').read())
 config = json.loads(open(CONFIG_PATH).read())
 
-
+# define the TreeTagger folder
 my_os = get_os()
 if my_os=='win':
     tagger = TreeTagger(TAGLANG='fr',TAGDIR=join(getcwd(),'Treetagger','TreeTagger_windows'))
@@ -36,8 +37,17 @@ else:
 
 
 def Tree(tree=tree):
+    """the main recursive fonction that is responsible of reading the tree and deciding witch node is next  
+    
+    This fonction takes the cuurent position in the tree (current node), do the processing and end up with a recursive call 
+    with the next node
 
+    Args:
+        tree (obj): a node of the tree (start by default)
 
+    """
+
+    # make sure no temp file is left in _data
     clean_cache()
 
     # if tree is a tag, search it
@@ -46,15 +56,16 @@ def Tree(tree=tree):
         if not tree:
             return
     
-
+    # check for screen mode
     if not str_to_bool(config['screen_mode']) and "screen" in tree['config']:
         text_to_speech("Cette action n'est pas possible car le mode écran est désactivé")
-        return "start"
+        Tree("start")
 
-    text= tree['text']
-    say=""
+
 
     # Do a random choices of sentences to say
+    text= tree['text']
+    say=""
     for choices in text:  
         choice= random.choice(choices)
         say+= analyse_var(choice,tree)
@@ -65,8 +76,10 @@ def Tree(tree=tree):
 
     text_to_speech(say)
 
-    # Chose the next step based on the request of the user 
-    step= next_step(tree)
+
+    # Choose the next step based on the request of the user 
+    action= tree['action']
+    step = take_action(action,tree)
 
     # stop the fonction if the user asked for
     if step==EXIT_TREE:
@@ -76,6 +89,19 @@ def Tree(tree=tree):
 
 
 def analyse_var(text,tree):
+    """processes the text and replace all variables (words between {}) with a value
+
+    Current recongnized variables are:
+        "context" : the context from the current tree node 
+
+    Args:
+        text (string): the text to analyse
+        tree (obj): the current node to get the context from it
+
+    Returns:
+        string: the text already processed 
+
+    """
     variables = re.findall(r"(\{(.+?)\})", text)
     for string,var in variables:
         var = var.strip().lower()
@@ -87,124 +113,25 @@ def analyse_var(text,tree):
 
     return text
 
+
 def next_step(tree):
-    action= tree['action']
-    step=None
+    """do the proccessing to decide which node sould be next
 
-    if action=="listen":
-        response= listen()
-        if response:
-            step= choose_next_step(response,tree)
-            if step==REPETE:
-                Tree(tree)
-                step= EXIT_TREE
+    Args:
+        tree (obj): the current node in the tree
 
-    elif action=="face_recognizer":
-        res= face_recognizer()
-        if res=="0":
-            step= choose_next_step("unknown",tree)
-        else:
-            step= choose_next_step("known",tree,context=res)
-    
-    elif action=="emotion_recognition":
-        emotion = emotion_recognition()
-        if emotion:
-            step= choose_next_step("known",tree,context=emotion)
-        else:
-            step= choose_next_step("unknown",tree)
+    Returns:
+        string: the text already processed 
 
-    elif action=="face_register":
-        isOpen= Webcam.open()
-        if isOpen:
-            Webcam.take_photo(path_volume+"user.jpg")
-            Webcam.take_photo(path_volume+"face.jpg")
-            Webcam.close()
-
-            succes= bool(int(face_recognizer("face.jpg","user.jpg")))
-            if succes:
-                text_to_speech("Quel est votre nom ?")
-                name= listen()
-                if name:
-                    if name not in [f['name'] for f in faces['faces']]: 
-                        path_img= "faces/"+name.strip().replace(' ','_')+".jpg"
-                        os.rename(path_volume+"user.jpg",path_volume+path_img)
-
-                        faces['faces'].append({'name': name, 'path_img': path_img})
-                        jsonFile = open(path_volume+"faces.json", "w+")
-                        jsonFile.write(json.dumps(faces,indent=4))
-                        jsonFile.close()
-
-                        step= choose_next_step("succes",tree) 
-                    else:            
-                        text_to_speech("Désolé, ce nom existe déjà, j'annule cette opération")
-                else:
-                    text_to_speech("Désolé, je n'ai pas compris, j'annule cette opération")
-
-                if not step:
-                    os.remove(path_volume+"user.jpg")
-                    step= "start"
-
-            else:
-                step= choose_next_step("fail",tree)
-
-        else:
-            text_to_speech("Désolé, je n'ai pas pu ouvrir le webcam")
-            step= "start"
-
-    elif action=="google":
-        attempt=3
-        request = speech_to_text()
-        while not request or request=="":
-            if attempt:
-                attempt-= 1
-                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
-                request = speech_to_text()
-            else:
-                break
-
-        if request and request!="":
-            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
-            url = 'https://www.google.com/search?q='+request.strip().replace(' ','+')
-            webbrowser.open_new_tab(url)
-
-        else: 
-            text_to_speech("Désolé, je n'ai pas compris")
-
-        step= "start"  
-
-    elif action=="youtube":
-        attempt=3
-        request = speech_to_text()
-        while not request or request=="":
-            if attempt:
-                attempt-= 1
-                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
-                request = speech_to_text()
-            else:
-                break
-
-        if request and request!="":
-            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
-            url = 'https://www.youtube.com/search?q='+request.strip().replace(' ','+')
-            webbrowser.open_new_tab(url)
-        else: 
-            text_to_speech("Désolé, je n'ai pas compris")
-
-        step= "start" 
-            
-    elif action=="stop":
-        step= EXIT_TREE
-
-    else:
-        step= random.choice(tree['next'])
-
-    return step
+    """
+    return 
 
 
-def choose_next_step(text,tree,context=None):
+def choose_next_step(tree,text,context=None):
     responses= tree['next']
     responses.append("start>stop")
-    
+        
+
     tags = make_tags(tagger.tag_text(text),exclude_nottags=True)
     proper_name=[]
     noun=[]
@@ -268,3 +195,111 @@ def listen():
             break
 
     return response
+
+
+def take_action(action,tree):
+    if action=="listen":
+        response= listen()
+        if response:
+            step= choose_next_step(tree,response)
+            if step==REPETE:
+                Tree(tree)
+                step= EXIT_TREE
+
+    elif action=="stop":
+        step= EXIT_TREE
+
+    elif action=="face_recognizer":
+        res= face_recognizer()
+        if res=="0":
+            step= choose_next_step(tree,"unknown")
+        else:
+            step= choose_next_step(tree,"known",context=res)
+    
+    elif action=="emotion_recognition":
+        emotion = emotion_recognition()
+        if emotion:
+            step= choose_next_step(tree,"known",context=emotion)
+        else:
+            step= choose_next_step(tree,"unknown")
+
+    elif action=="face_register":
+        isOpen= Webcam.open()
+        if isOpen:
+            Webcam.take_photo(path_volume+"user.jpg")
+            Webcam.take_photo(path_volume+"face.jpg")
+            Webcam.close()
+
+            succes= bool(int(face_recognizer("face.jpg","user.jpg")))
+            if succes:
+                text_to_speech("Quel est votre nom ?")
+                name= listen()
+                if name:
+                    if name not in [f['name'] for f in faces['faces']]: 
+                        path_img= "faces/"+name.strip().replace(' ','_')+".jpg"
+                        os.rename(path_volume+"user.jpg",path_volume+path_img)
+
+                        faces['faces'].append({'name': name, 'path_img': path_img})
+                        jsonFile = open(path_volume+"faces.json", "w+")
+                        jsonFile.write(json.dumps(faces,indent=4))
+                        jsonFile.close()
+
+                        step= choose_next_step(tree,"succes") 
+                    else:            
+                        text_to_speech("Désolé, ce nom existe déjà, j'annule cette opération")
+                else:
+                    text_to_speech("Désolé, je n'ai pas compris, j'annule cette opération")
+
+                if not step:
+                    os.remove(path_volume+"user.jpg")
+                    step= "start"
+
+            else:
+                step= choose_next_step(tree,"fail")
+
+        else:
+            text_to_speech("Désolé, je n'ai pas pu ouvrir le webcam")
+            step= "start"
+
+    elif action=="google":
+        attempt=3
+        request = speech_to_text()
+        while not request or request=="":
+            if attempt:
+                attempt-= 1
+                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
+                request = speech_to_text()
+            else:
+                break
+
+        if request and request!="":
+            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
+            url = 'https://www.google.com/search?q='+request.strip().replace(' ','+')
+            webbrowser.open_new_tab(url)
+
+        else: 
+            text_to_speech("Désolé, je n'ai pas compris")
+
+        step= "start"  
+
+    elif action=="youtube":
+        attempt=3
+        request = speech_to_text()
+        while not request or request=="":
+            if attempt:
+                attempt-= 1
+                text_to_speech("Je n'ai pas compris, pouvez-vous répéter ?")
+                request = speech_to_text()
+            else:
+                break
+
+        if request and request!="":
+            text_to_speech(random.choice(["Voici les résultats","Voici ce que j'ai trouvé"])) 
+            url = 'https://www.youtube.com/search?q='+request.strip().replace(' ','+')
+            webbrowser.open_new_tab(url)
+        else: 
+            text_to_speech("Désolé, je n'ai pas compris")
+
+        step= "start" 
+
+    return step

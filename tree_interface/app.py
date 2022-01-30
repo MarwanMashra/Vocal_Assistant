@@ -8,7 +8,6 @@ import webbrowser
 from wsgiref.simple_server import make_server
 
 import sys
-# sys.path[0] += '\\..'
 from utils import *
 
 
@@ -22,8 +21,6 @@ app= Flask(__name__,
 
 app.config.from_mapping(SECRET_KEY='mysecret')
 
-@app.route('/')
-@app.route('/index')
 @app.route('/index.html')
 def index():
 	return render_template('index.html')

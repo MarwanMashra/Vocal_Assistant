@@ -5,3 +5,4 @@ _data/emotion.txt
 _data/face.jpg
 client_secret*
 *.pickle
+credentials/credentials.json

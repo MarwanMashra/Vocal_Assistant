@@ -3,14 +3,9 @@ import speech_recognition as sr
 import sys,os,requests
 
 
-if sys.platform.startswith('win'):
-    DEFAULT_HOST= "host.docker.internal"
-else:
-    DEFAULT_HOST= "127.0.0.1"
-
 DEFAULT_PORT= "5000"
 
-def url(route="",host=DEFAULT_HOST,port=DEFAULT_PORT):
+def url(route,host,port=DEFAULT_PORT):
     return 'http://'+host+':'+port+'/'+route
 
 def convert_text(path_text,path_volume,play_effect=True):
@@ -19,7 +14,10 @@ def convert_text(path_text,path_volume,play_effect=True):
     file_path=path_volume+"/"+file_name
 
     # send a request to record audio form mic
-    response= requests.get(url("microphone"),params={'file':file_name,'play_effect':play_effect}).json() 
+    try:
+        response= requests.get(url("microphone",host="127.0.0.1"),params={'file':file_name,'play_effect':play_effect}).json() 
+    except:
+        response= requests.get(url("microphone",host="host.docker.internal"),params={'file':file_name,'play_effect':play_effect}).json() 
 
     if response['status']=='succes':
         r = sr.Recognizer()

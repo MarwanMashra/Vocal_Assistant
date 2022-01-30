@@ -20,7 +20,7 @@ How to run
 4. Create docker images by running
     ```
 
-    $ docker-compose -f ./docker-compose/docker-compose-x86.yml build
+    $ docker-compose -f ./docker-compose/docker-compose-x86.yml -p app build
 
     ````
 5. Finally, start the app with 

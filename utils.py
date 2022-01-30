@@ -52,7 +52,7 @@ def emotion_recognition():
         return None
 
     t=time.time()
-    client.containers.run('ter_s6_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
+    client.containers.run('app_emotion_recognition',command='volume/face.jpg volume/emotion.txt',volumes=volumes,auto_remove=True)
 
     os.remove(path_volume+"face.jpg")
 
@@ -83,14 +83,14 @@ def text_to_speech(text):
     f.write(text)
     f.close()
 
-    client.containers.run('ter_s6_text_to_speech',command='volume/say.txt volume',volumes=volumes,network_mode="host",auto_remove=True)
+    client.containers.run('app_text_to_speech',command='volume/say.txt volume',volumes=volumes,network_mode="host",auto_remove=True)
 
     os.remove(path_volume+"say.txt")
 
 def speech_to_text(play_effect="True"):
     client = docker.from_env()
     t=time.time()
-    client.containers.run('ter_s6_speech_to_text',command='volume/speech.txt volume '+play_effect,volumes=volumes,network_mode="host",auto_remove=True)
+    client.containers.run('app_speech_to_text',command='volume/speech.txt volume '+play_effect,volumes=volumes,network_mode="host",auto_remove=True)
 
     if not watch(path_volume+"speech.txt",t):
         print("ERROR: speech_to_text")
@@ -128,7 +128,7 @@ def face_recognizer(face_path=None,face_bib="faces.json"):
     t=time.time()
     face_path= "face.jpg"
 
-    client.containers.run('ter_s6_face_recognizer',command='volume/'+face_path+' volume/'+face_bib+' volume/face_reco.txt volume',volumes=volumes,auto_remove=True)
+    client.containers.run('app_face_recognizer',command='volume/'+face_path+' volume/'+face_bib+' volume/face_reco.txt volume',volumes=volumes,auto_remove=True)
     os.remove(path_volume+face_path)
 
     if not watch(path_volume+"face_reco.txt",t):
